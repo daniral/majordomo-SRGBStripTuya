@@ -1,0 +1,130 @@
+<script type="text/javascript">
+    // создаём объект для текущей лампы, если его нет
+    if (typeof window.rgbStripTuya === 'undefined') window.rgbStripTuya = {};
+    if (typeof window.rgbStripTuya%.object_id% === 'undefined') {
+        window.rgbStripTuya%.object_id% = {
+			level: %.level% || 50,
+			workScene: null,
+			scenes: {}
+        };
+    }
+
+    // ================= Цветной свет =================
+    function sendNewColor%.object_id%(val) {
+        setGlobal('%.object_title%.color', val);
+    }
+    function setLevel%.object_id%(val) {
+        rgbStripTuya%.object_id%.level = val;
+        $('#rgbStripTuya%.object_id%_colorBright').html("Яркость: " + rgbStripTuya%.object_id%.level);
+        sendNewLevel%.object_id%();
+    }
+    function sendNewLevel%.object_id%() {
+        setGlobal('%.object_title%.level', rgbStripTuya%.object_id%.level);
+    }
+
+	// ================= Сцены =================
+	function populateSceneSelect%.object_id%() {
+		const select = document.getElementById('sceneSelect%.object_id%');
+		if (!select) return;
+
+		let sceneStr = getGlobal('%.object_title%.scenesList');
+		let currentSceneName = getGlobal('%.object_title%.sceneName');
+
+		rgbStripTuya%.object_id%.scenes = [];
+
+		// Функция для "расширенного trim"
+		// убираем пробелы, кавычки, запятые и т.п. по краям
+		function cleanString(str) {
+			return (str || '')
+				.replace(/^[\s"'`;,.]+|[\s"'`;,.]+$/g, '')
+				.trim();
+		}
+
+		// Очистка списка и парсинг
+		if (sceneStr && typeof sceneStr === 'string') {
+			sceneStr = cleanString(sceneStr);
+
+			sceneStr.split(',').forEach(item => {
+				const parts = item.split('=');
+				if (parts.length >= 1) {
+					const name = cleanString(parts[0]);
+					if (name) rgbStripTuya%.object_id%.scenes.push(name);
+				}
+			});
+		}
+
+		select.innerHTML = '';
+
+		// Если сцен нет
+		if (rgbStripTuya%.object_id%.scenes.length === 0) {
+			const opt = document.createElement('option');
+			opt.disabled = true;
+			opt.selected = true;
+			opt.textContent = 'Сцен нет';
+			select.appendChild(opt);
+			return;
+		}
+
+		// Если текущая сцена неизвестна
+		if (currentSceneName && cleanString(currentSceneName) === 'unknown') {
+			const unknownOpt = document.createElement('option');
+			unknownOpt.value = 'unknown';
+			unknownOpt.textContent = 'Неизвестная сцена';
+			unknownOpt.selected = true;
+			select.appendChild(unknownOpt);
+		}
+
+		// Добавляем все сцены
+		rgbStripTuya%.object_id%.scenes.forEach(name => {
+			const opt = document.createElement('option');
+			opt.value = name;
+			opt.textContent = name;
+			if (cleanString(currentSceneName) === name) opt.selected = true;
+			select.appendChild(opt);
+		});
+
+		rgbStripTuya%.object_id%.currentSceneName = cleanString(currentSceneName);
+	}
+
+	// Отправка выбранной сцены
+	function sendScene%.object_id%(sceneName) {
+		if (!sceneName) {
+			setGlobal('%.object_title%.sceneName', 'none');
+			rgbStripTuya%.object_id%.currentSceneName = null;
+			return;
+		}
+
+		sceneName = sceneName.replace(/^[\s"'`;,.]+|[\s"'`;,.]+$/g, '').trim();
+		rgbStripTuya%.object_id%.currentSceneName = sceneName;
+		setGlobal('%.object_title%.sceneName', sceneName);
+	}
+
+	$(document).ready(function() {
+        populateSceneSelect%.object_id%();
+    });
+</script>
+
+<style>
+	.card { background:#f4f4f4; border-radius:12px; padding:15px; box-shadow:0 2px 6px rgba(0,0,0,0.15); margin: 15px 0 15px 50px;}
+	input[type=color], input[type=range], select { width:100%; box-sizing:border-box; margin-bottom:8px;}
+</style>
+	
+<div class="device-widget controller loadtype_%.loadType%">
+ <div onClick='$("#icon%.object_id%_light").addClass("pressed");setTimeout("$(\"#icon%.object_id%_light\").removeClass(\"pressed\");",300);callMethod("%.object_title%.switch");'>
+  <div class="device-icon %.status|"off;on"%" id="icon%.object_id%_light" style='%.icon|"background-image:url(%.icon%)"%'></div>
+  <div class="device-header">%.object_description%</div>
+ </div>
+</div>
+
+<div class="card">
+	<h5>🎨 Цветной свет</h5>
+	<input type="color"  value="%.color%" onchange="sendNewColor%.object_id%(this.value);">
+	<div class="device-details"><span id="rgbStripTuya%.object_id%_colorBright">Яркость: %.level%</span></div>
+	<input type="range" min="1" max="100" value="%.level%" oninput="setLevel%.object_id%(this.value);">
+
+	<h5>🎨 Сцена</h5>
+    <select id="sceneSelect%.object_id%" onchange="sendScene%.object_id%(this.value);">
+        <!-- Опции будут сгенерированы динамически -->
+    </select>
+</div>
+
