@@ -75,15 +75,15 @@ if (SETTINGS_SITE_LANGUAGE && file_exists(ROOT . 'languages/SRGBStripTuya_' . SE
 }
 
 $this->device_types['RGBStripTuya'] = array(
-	'TITLE' => 'RGB лента(Tuya)',
+	'TITLE' => 'Освещение(RGB лента Tuya)',
 	'PARENT_CLASS' => 'SControllers',
 	'CLASS' => 'SRGBStripTuya',
 	'DESCRIPTION'=>'RGB лента(Tuya)',
 	'PROPERTIES' => array(
-		'color' => array('DESCRIPTION' => 'Цвет (RGB).', 'ONCHANGE' => 'propertysUpdated', 'DATA_KEY' => 1, 'VALIDATION_TYPE' => 100 ,'VALIDATION_CODE' => '$value = preg_match(\'/^#?[0-9a-f]{6}$/i\', $value )?$value:\'#ffff00\';'),
-		'colorWork' => array('DESCRIPTION' => 'Рабочий цвет (HSV).', 'ONCHANGE' => 'worksUpdated', 'VALIDATION_TYPE' => 100 ,'VALIDATION_CODE' => '$value = preg_match(\'/^[0-9a-f]{12}$/i\', $value )?$value:\'003c03e801f4\';'),
+		'color' => array('DESCRIPTION' => 'Цвет (RGB).', 'ONCHANGE' => 'propertysUpdated', 'DATA_KEY' => 1),
+		'colorWork' => array('DESCRIPTION' => 'Рабочий цвет (HSV).', 'ONCHANGE' => 'worksUpdated'),
 		'colorSaved' => array('DESCRIPTION' => 'Последний цвет.'),
-		'level' => array('DESCRIPTION' => 'Яркость (0<-->100).', 'ONCHANGE' => 'propertysUpdated', 'DATA_KEY' => 1 ,'VALIDATION_TYPE' => 1, 'VALIDATION_NUM_MIN' => 1, 'VALIDATION_NUM_MAX' => 100),
+		'level' => array('DESCRIPTION' => 'Яркость (0<-->100).', 'ONCHANGE' => 'propertysUpdated', 'DATA_KEY' => 1),
 		'work_mode' => array('DESCRIPTION' => 'Режим работы.'),
 		'workScene' => array('DESCRIPTION' => 'Рабочая сцена.', 'ONCHANGE' => 'worksUpdated'),
 		'scenesList' => array('DESCRIPTION' => 'Список сцен.'),
