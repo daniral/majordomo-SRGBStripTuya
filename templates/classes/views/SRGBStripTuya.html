@@ -1,4 +1,34 @@
 <script type="text/javascript">
+/**
+ * Управление RGB-лентой Tuya в MajorDoMo.
+ *
+ * Скрипт реализует функции:
+ *
+ * 1. Управление яркостью:
+ *    - Предпросмотр изменения яркости (без отправки на сервер)
+ *    - Отправка яркости с задержкой (debounce 500 мс)
+ *    - Окрашивание фона ползунка под % яркости
+ *
+ * 2. Управление цветом:
+ *    - Выбор цвета через input[type=color]
+ *    - Отправка HEX-значения через setGlobal
+ *
+ * 3. Управление сценами:
+ *    - Загрузка списка сцен из глобальной переменной "scenesList"
+ *    - Парсинг формата: "Relax=1,Party=2,Sunset=3"
+ *    - Генерация выпадающего списка
+ *    - Подсветка активной сцены
+ *
+ * 4. Синхронизация с сервером:
+ *    - Обновление ползунка яркости, если пользователь его не двигает
+ *
+ * Глобальный объект window.rgbStripTuya{object_id}:
+ * @property {number} level                 Текущая яркость
+ * @property {boolean} dragging             Флаг удержания ползунка
+ * @property {Array<string>} scenes         Список имён сцен
+ * @property {string|null} currentSceneName Текущая активная сцена
+ */
+
     // создаём объект для текущей лампы, если его нет
     if (typeof window.rgbStripTuya === 'undefined') window.rgbStripTuya = {};
     if (typeof window.rgbStripTuya%.object_id% === 'undefined') {
