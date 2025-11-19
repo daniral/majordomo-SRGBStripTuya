@@ -3,23 +3,44 @@
     if (typeof window.rgbStripTuya === 'undefined') window.rgbStripTuya = {};
     if (typeof window.rgbStripTuya%.object_id% === 'undefined') {
         window.rgbStripTuya%.object_id% = {
-			level: %.level% || 50,
+			level: %.level%,
 			workScene: null,
-			scenes: {}
+			scenes: {},
+			currentSceneName: null,
+			dragging: false
         };
     }
 
+	// --- Debounce функции ---
+	let levelTimeout%.object_id%;
+
+	// --- Яркость ---
+	function previewLevel%.object_id%(val) {
+	  val = parseInt(val);
+	  window.rgbStripTuya%.object_id%.dragging = true; 
+	  window.rgbStripTuya%.object_id%.level = val;
+	  $('#rgbStripTuya%.object_id%_leveltxt').text("Яркость: " + val + "%");
+	  updateSliderFill('#rgbStripTuya%.object_id%_level', val, '#4CAF50');
+	}
+
+	function sendNewLevel%.object_id%() {
+	  window.rgbStripTuya%.object_id%.dragging = false;
+	  clearTimeout(levelTimeout%.object_id%);
+	  levelTimeout%.object_id% = setTimeout(() => {
+		  callMethod('%.object_title%.setLevel', 'value=' + window.rgbStripTuya%.object_id%.level);
+	  }, 500);
+	}
+
+	// --- Обновление фона ползунка ---
+	function updateSliderFill(selector, value, color) {
+	  const slider = document.querySelector(selector);
+	  const percentage = value;
+	  slider.style.background = `linear-gradient(90deg, ${color} ${percentage}%, #ddd ${percentage}%)`;
+	}
+	
     // ================= Цветной свет =================
     function sendNewColor%.object_id%(val) {
         setGlobal('%.object_title%.color', val);
-    }
-    function setLevel%.object_id%(val) {
-        rgbStripTuya%.object_id%.level = val;
-        $('#rgbStripTuya%.object_id%_colorBright').html("Яркость: " + rgbStripTuya%.object_id%.level);
-        sendNewLevel%.object_id%();
-    }
-    function sendNewLevel%.object_id%() {
-        setGlobal('%.object_title%.level', rgbStripTuya%.object_id%.level);
     }
 
 	// ================= Сцены =================
@@ -28,34 +49,20 @@
 		if (!select) return;
 
 		let sceneStr = getGlobal('%.object_title%.scenesList');
-		let currentSceneName = getGlobal('%.object_title%.sceneName');
+		let currentSceneName = getGlobal('%.object_title%.sceneName') || 'none';
+		window.rgbStripTuya%.object_id%.currentSceneName = currentSceneName;
 
 		rgbStripTuya%.object_id%.scenes = [];
 
-		// Функция для "расширенного trim"
-		// убираем пробелы, кавычки, запятые и т.п. по краям
-		function cleanString(str) {
-			return (str || '')
-				.replace(/^[\s"'`;,.]+|[\s"'`;,.]+$/g, '')
-				.trim();
-		}
-
-		// Очистка списка и парсинг
 		if (sceneStr && typeof sceneStr === 'string') {
-			sceneStr = cleanString(sceneStr);
-
 			sceneStr.split(',').forEach(item => {
-				const parts = item.split('=');
-				if (parts.length >= 1) {
-					const name = cleanString(parts[0]);
-					if (name) rgbStripTuya%.object_id%.scenes.push(name);
-				}
+				const name = item.split('=')[0].trim();
+				if (name) rgbStripTuya%.object_id%.scenes.push(name);
 			});
 		}
 
 		select.innerHTML = '';
 
-		// Если сцен нет
 		if (rgbStripTuya%.object_id%.scenes.length === 0) {
 			const opt = document.createElement('option');
 			opt.disabled = true;
@@ -65,48 +72,133 @@
 			return;
 		}
 
-		// Если текущая сцена неизвестна
-		if (currentSceneName && cleanString(currentSceneName) === 'unknown') {
-			const unknownOpt = document.createElement('option');
-			unknownOpt.value = 'unknown';
-			unknownOpt.textContent = 'Неизвестная сцена';
-			unknownOpt.selected = true;
-			select.appendChild(unknownOpt);
-		}
-
-		// Добавляем все сцены
+		// Добавляем все сцены и подсветку активной
 		rgbStripTuya%.object_id%.scenes.forEach(name => {
 			const opt = document.createElement('option');
 			opt.value = name;
 			opt.textContent = name;
-			if (cleanString(currentSceneName) === name) opt.selected = true;
+			if (name === currentSceneName) {
+				opt.selected = true;
+				opt.style.background = '#4CAF50';
+				opt.style.color = 'white';
+			}
 			select.appendChild(opt);
 		});
-
-		rgbStripTuya%.object_id%.currentSceneName = cleanString(currentSceneName);
 	}
 
-	// Отправка выбранной сцены
 	function sendScene%.object_id%(sceneName) {
 		if (!sceneName) {
 			setGlobal('%.object_title%.sceneName', 'none');
 			rgbStripTuya%.object_id%.currentSceneName = null;
+			populateSceneSelect%.object_id%();
 			return;
 		}
 
-		sceneName = sceneName.replace(/^[\s"'`;,.]+|[\s"'`;,.]+$/g, '').trim();
-		rgbStripTuya%.object_id%.currentSceneName = sceneName;
+		sceneName = sceneName.trim();
+		window.rgbStripTuya%.object_id%.currentSceneName = sceneName;
 		setGlobal('%.object_title%.sceneName', sceneName);
+		populateSceneSelect%.object_id%(); // обновляем подсветку
+	}
+
+	// --- Обновление слайдера с сервера ---
+	function updateFromServer(level) {
+	  if (!window.rgbStripTuya%.object_id%.dragging) { 
+		  window.rgbStripTuya%.object_id%.level = level;
+		  $('#rgbStripTuya%.object_id%_leveltxt').text("Яркость: " + level + "%");
+		  $('#rgbStripTuya%.object_id%_level').val(level);
+		  updateSliderFill('#rgbStripTuya%.object_id%_level', level, '#4CAF50');
+	  }
 	}
 
 	$(document).ready(function() {
         populateSceneSelect%.object_id%();
+        updateSliderFill('#rgbStripTuya%.object_id%_level', %.level%, '#4CAF50');
     });
 </script>
 
 <style>
-	.card { background:#f4f4f4; border-radius:12px; padding:15px; box-shadow:0 2px 6px rgba(0,0,0,0.15); margin: 15px 0 15px 50px;}
-	input[type=color], input[type=range], select { width:100%; box-sizing:border-box; margin-bottom:8px;}
+/* Стили для карточки */
+.card {
+  background: #fff;
+  border-radius: 16px;
+  padding: 20px;
+  box-shadow: 0 4px 20px rgba(0,0,0,0.1);
+  margin: 20px 0 20px 50px;
+  max-width: 320px;
+  font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+}
+
+/* Стили для яркости и цвета */
+.device-details p {
+  margin: 8px 0 4px;
+  font-weight: 500;
+  color: #333;
+}
+
+/* Слайдеры */
+
+input[type=range] {
+  width: 100%;
+  height: 8px;
+  border-radius: 5px;
+  outline: none;
+  background: linear-gradient(90deg, #ddd 0%, #ddd 0%);
+  transition: background 0.2s ease;
+  -webkit-appearance: none;
+}
+input[type=range]::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  appearance: none;
+  width: 20px;
+  height: 20px;
+  border-radius: 50%;
+  background: white;
+  border: 3px solid currentColor;
+  box-shadow: 0 0 6px rgba(0,0,0,0.3);
+  cursor: pointer;
+  transition: transform 0.15s ease;
+}
+input[type=range]::-webkit-slider-thumb:hover {
+  transform: scale(1.2);
+}
+#rgbStripTuya%.object_id%_level {
+  color: #4CAF50;
+}
+
+/* --- Стили кастомного селекта --- */
+.select-wrapper {
+  position: relative;
+  display: inline-block;
+  width: 100%;
+  margin-top: 5px;
+}
+
+.select-wrapper select {
+  width: 100%;
+  padding: 6px 16px; 
+  border-radius: 10px;
+  border: 1px solid #ccc;
+  background-color: #f4f4f4;
+  font-family: "Segoe UI", sans-serif;
+  font-size: 14px;
+  appearance: none;
+  -webkit-appearance: none;
+  -moz-appearance: none;
+  cursor: pointer;
+  transition: background 0.2s, border-color 0.2s;
+}
+
+.select-wrapper select:focus {
+  border-color: #4CAF50;
+  background-color: #fff;
+  outline: none;
+}
+
+
+/* Опционально: плавное изменение фона при наведении */
+.select-wrapper select:hover {
+  background-color: #eaeaea;
+}
 </style>
 	
 <div class="device-widget controller loadtype_%.loadType%">
@@ -117,14 +209,30 @@
 </div>
 
 <div class="card">
+  <div class="device-details">
 	<h5>🎨 Цветной свет</h5>
-	<input type="color"  value="%.color%" onchange="sendNewColor%.object_id%(this.value);">
-	<div class="device-details"><span id="rgbStripTuya%.object_id%_colorBright">Яркость: %.level%</span></div>
-	<input type="range" min="1" max="100" value="%.level%" oninput="setLevel%.object_id%(this.value);">
-
-	<h5>🎨 Сцена</h5>
-    <select id="sceneSelect%.object_id%" onchange="sendScene%.object_id%(this.value);">
-        <!-- Опции будут сгенерированы динамически -->
-    </select>
+	<input type="color"  
+		   value="%.color%" 
+		   onchange="sendNewColor%.object_id%(this.value);">
+    <p id="rgbStripTuya%.object_id%_leveltxt">Яркость: %.level%%</p>
+    <input id="rgbStripTuya%.object_id%_level" 
+           type="range" min="1" max="100" step="1"
+           value="%.level%" 
+           oninput="previewLevel%.object_id%(this.value)"
+           onmouseup="sendNewLevel%.object_id%()"
+           ontouchend="sendNewLevel%.object_id%()"> 
+  </div>	   
+  <div class="select-wrapper">
+	<h5>🎭 Сцены</h5>
+	<select id="sceneSelect%.object_id%" onchange="sendScene%.object_id%(this.value)">
+		<!-- Опции будут сгенерированы динамически -->
+	</select>
+  </div>
+  
 </div>
 
+<script>
+	// Инициализация фона ползунка и сцен при загрузке
+	updateSliderFill('#rgbStripTuya%.object_id%_level', %.level%, '#4CAF50');
+	populateSceneSelect%.object_id%();
+</script>

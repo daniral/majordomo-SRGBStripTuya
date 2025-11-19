@@ -2,7 +2,6 @@
 
 if ($this->getProperty('level') == '') $this->setProperty('level', '50');
 if ($this->getProperty('color') == '') $this->setProperty('color', '#ffff00');
-
 $value = $params['NEW_VALUE'];
 $transform = array(
 	'red'      => '#ff0000',
@@ -22,23 +21,32 @@ if (isset($transform[$value])) $value = $transform[$value];
 $value = normalizeRange($value);
 $colorSaved = $this->getProperty('colorSaved') ?? '#ffff00';
 $level = normalizeRange($this->getProperty('level'),1);
+$levelSaved = normalizeRange($this->getProperty('levelSaved'),1);
 $source = strtok($params['SOURCE'], " ") ?? null;
 $property = $params['PROPERTY'] ?? null;
 $status = $this->getProperty('status') ?? 0;
 $sceneName = trim($this->getProperty('sceneName'), " \t\n\r\0\x0B\"'");
 $sceneNameSaved = $this->getProperty('sceneNameSaved') ?? 'unknown';
 
-if(!is_null($value)) $this->setProperty($property , $value, 'worksUpdated');
-if( $source === 'worksUpdated') return;
+if($source === 'worksUpdated') return;
+
+if(in_array($property, ['color', 'level'])){
+	if(!is_null($value)) {
+		$this->setProperty($property , $value, 'worksUpdated');
+	}else{
+		$this->setProperty($property , $property==='level'?$levelSaved:$colorSaved, 'worksUpdated');
+		return;
+	}
+}
 
 if(in_array($property, ['color', 'level']) && !is_null($value)){
-	if($property == 'level')  $value = $colorSaved;
 	$this->setProperty('work_mode', 'colour');
+	if($property == 'level')  $value = $colorSaved;
 	$hsvHex = rgbToHSVhex($value, $level)?: '003c03e801f4';
 	$this->setProperty('colorWork', $hsvHex, 'propertysUpdated');
 	if (!$status) $this->setProperty('status', 1);
-	$this->setProperty('colorSaved', $value);
-}elseif(in_array($property, ['sceneName']) && $sceneName != 'unknown'){
+	$this->setProperty($property.'Saved', $property === 'level'?$level:$value);
+}elseif($property=='sceneName' && $sceneName != 'unknown'){
 	// Получаем список сцен и очищаем его от пробелов, кавычек и переводов строк по краям
 	$scenesList = trim($this->getProperty('scenesList'), " \t\n\r\0\x0B\"'");
 	// Разбиваем на отдельные сцены (по запятой или новой строке)
