@@ -60,7 +60,7 @@ $transform = array(
 	);
 if (isset($transform[$value])) $value = $transform[$value];
 
-$value = normalizeRange($value);
+$value = normalizeRange($value, 1);
 $colorSaved = $this->getProperty('colorSaved') ?? '#ffff00';
 $level = normalizeRange($this->getProperty('level'),1);
 $levelSaved = normalizeRange($this->getProperty('levelSaved'),1);
