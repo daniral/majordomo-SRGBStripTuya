@@ -25,7 +25,7 @@
  * window.rgbStripTuya[object_id] = {
  *   currentColor: string,          // текущий цвет (#HEX)
  *   level: number,                 // яркость лампы (0-100)
- *   workScene: string|null,        // активная рабочая сцена
+ *   sceneWork: string|null,        // активная рабочая сцена
  *   scenes: string[],              // список доступных сцен
  *   currentSceneName: string|null, // текущая сцена
  *   dragging: boolean,             // флаг перетаскивания ползунка
@@ -37,7 +37,7 @@
  *
  * initLamp(objectId, color, level)
  *   - Создает объект лампы или возвращает существующий.
- *   - Инициализирует все свойства: currentColor, level, workScene, scenes, currentSceneName, dragging, levelTimeout.
+ *   - Инициализирует все свойства: currentColor, level, sceneWork, scenes, currentSceneName, dragging, levelTimeout.
  *   - @param {string} objectId - ID лампы
  *   - @param {string} color - начальный HEX цвет
  *   - @param {number} level - начальная яркость (0-100)
@@ -94,7 +94,7 @@
         window.rgbStripTuya%.object_id% = {
 			currentColor: '%.color%',
             level: %.level% || 50,
-            workScene: null,
+            sceneWork: null,
             scenes: [],
             currentSceneName: null,
             dragging: false,
