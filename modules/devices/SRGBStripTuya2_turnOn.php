@@ -178,7 +178,7 @@ $sceneNameSaved = $this->getProperty('sceneNameSaved');
 $sceneName = $params['sceneName'] ?? $sceneNameSaved ?? 'Спокойная' ?? null;
 
 $mode = $params['mode'] ?? $this->getProperty('mode') ?? '1';
-$dayNightMode = $params['mode'] ?? '1';
+$dayNightMode = $params['mode'] ?? null;
 
 $autoMode = ($params['autoMode'] ?? 0) == 1;
 

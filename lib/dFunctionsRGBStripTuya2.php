@@ -134,9 +134,10 @@ if (!function_exists('initDefaults')) {
  *     cct:int|null,
  *     color:string|null,
  *     colorLevel:int|null,
- *     sceneName:string|null
+ *     sceneName:string|null,
  * 	   dayNightMode:int|null
  * }
+ * 
  */
 if (!function_exists('getAutoLevelCct')) {
 	function getAutoLevelCct($object, $level=null, $cct=null, $color=null, $colorLevel=null, $sceneName=null, $dayNightMode=null) {
