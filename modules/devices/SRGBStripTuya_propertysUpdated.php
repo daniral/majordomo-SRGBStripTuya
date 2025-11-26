@@ -5,7 +5,7 @@
  * Метод выполняет:
  *  - обработку входящих значений цвета (HEX или пресеты: red, blue, lime и т.д.);
  *  - нормализацию цветовых и яркостных параметров;
- *  - обновление рабочих свойств устройства (colorWork, workScene);
+ *  - обновление рабочих свойств устройства (colorWork, sceneWork);
  *  - переключение режима работы (colour / scene);
  *  - восстановление предыдущих значений, если пришло пустое значение;
  *  - обработку выбора сцены через свойство sceneName.
@@ -16,7 +16,7 @@
  *  - colorSaved         — сохранённый цвет для восстановления
  *  - levelSaved         — сохранённая яркость
  *  - colorWork          — цвет в формате HSV-HEX для отправки устройству
- *  - workScene          — текущая активная сцена
+ *  - sceneWork          — текущая активная сцена
  *  - sceneName          — имя выбранной пользователем сцены
  *  - sceneNameSaved     — сохранённая ранее сцена
  *  - scenesList         — список доступных сцен (формат "Имя=Значение,...")
@@ -32,7 +32,7 @@
  *  1. Если пришли color или level — нормализуем, сохраняем и включаем устройство.
  *  2. Значение цвета может быть пресетом ('red','blue','lime'...) → преобразуется в HEX.
  *  3. Генерируем HSV-HEX строку (rgbToHSVhex) и записываем в colorWork.
- *  4. Если изменена сцена (sceneName) — ищем её в scenesList и активируем workScene.
+ *  4. Если изменена сцена (sceneName) — ищем её в scenesList и активируем sceneWork.
  *  5. Если сцена не найдена — возвращаем сохранённую предыдущую.
  *  6. SOURCE=worksUpdated — используется для защиты от циклического обновления.
  *
@@ -100,11 +100,11 @@ if(in_array($property, ['color', 'level']) && !is_null($value)){
 		if (count($parts) == 2) {
 			$name  = $parts[0];
 			$scene = $parts[1];
-			// Если имя совпадает, обновляем workScene
+			// Если имя совпадает, обновляем sceneWork
 			if ($name === $sceneName) {
 				$foundName = true;
 				$this->setProperty('work_mode', 'scene');
-				$this->setProperty('workScene', $scene, 'propertysUpdated');
+				$this->setProperty('sceneWork', $scene, 'propertysUpdated');
 				$this->setProperty('sceneNameSaved', $name);
 				if (!$status) $this->setProperty('status', 1);
 				break; // нашли нужную сцену, дальше не ищем

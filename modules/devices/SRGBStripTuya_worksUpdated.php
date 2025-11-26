@@ -10,7 +10,7 @@
  *      - Конвертирует его в RGB Hex через hsvToRgbHex().
  *      - Устанавливает цвет (color), сохранённый цвет (colorSaved)
  *        и уровень яркости (level).
- *  3. Обрабатывает изменения свойства "workScene":
+ *  3. Обрабатывает изменения свойства "sceneWork":
  *      - Получает значение выбранной сцены.
  *      - Сравнивает его со списком сцен в scenesList.
  *      - Находит имя сцены, соответствующее значению.
@@ -103,8 +103,8 @@ if(in_array($property, ['colorWork']) && !is_null($value)){
 	$this->setProperty('color', $colorRGB, 'worksUpdated');
 	$this->setProperty('colorSaved', $colorRGB);
 	$this->setProperty('level', $level, 'worksUpdated');
-}elseif(in_array($property, ['workScene']) && !is_null($params['NEW_VALUE'])){
-	$workScene = trim($params['NEW_VALUE'], " \t\n\r\0\x0B\"'");
+}elseif(in_array($property, ['sceneWork']) && !is_null($params['NEW_VALUE'])){
+	$sceneWork = trim($params['NEW_VALUE'], " \t\n\r\0\x0B\"'");
 	
 	// Получаем список сцен и очищаем его от пробелов и кавычек по краям
 	$scenesList = trim($this->getProperty('scenesList'), " \t\n\r\0\x0B\"'");
@@ -120,7 +120,7 @@ if(in_array($property, ['colorWork']) && !is_null($value)){
 			$name  = $parts[0];
 			$scene = $parts[1];
 			// Если значение совпадает, обновляем sceneName
-			if ($workScene === $scene) {
+			if ($sceneWork === $scene) {
 				$sceneNameToSet = $name;
 				$this->setProperty('sceneNameSaved', $sceneNameToSet);
 				break; // нашли нужную сцену, дальше не ищем

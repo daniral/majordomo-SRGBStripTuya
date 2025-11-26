@@ -25,7 +25,7 @@
  *                                   "color" — управление цветом,
  *                                   "scene" — использование сцены.
  *
- * @property string $workScene       Текущая рабочая сцена. OnChange: worksUpdated.
+ * @property string $sceneWork       Текущая рабочая сцена. OnChange: worksUpdated.
  *
  * @property string $scenesList      Список доступных сцен в формате: "имя=значение,имя=значение,...".
  *
@@ -65,7 +65,7 @@
  *      Вызывается при изменении яркости, цвета или сцены.
  *
  * @method void worksUpdated()
- *      Вызывается при изменении рабочих параметров (colorWork / workScene).
+ *      Вызывается при изменении рабочих параметров (colorWork / sceneWork).
  */
 
 if (SETTINGS_SITE_LANGUAGE && file_exists(ROOT . 'languages/SRGBStripTuya_' . SETTINGS_SITE_LANGUAGE . '.php')) {
@@ -86,7 +86,7 @@ $this->device_types['RGBStripTuya'] = array(
 		'level' => array('DESCRIPTION' => 'Яркость (0<-->100).', 'ONCHANGE' => 'propertysUpdated', 'DATA_KEY' => 1),
 		'levelSaved' => array('DESCRIPTION' => 'Последняя яркость.', 'ONCHANGE' => 'propertysUpdated', 'DATA_KEY' => 1),
 		'work_mode' => array('DESCRIPTION' => 'Режим работы.'),
-		'workScene' => array('DESCRIPTION' => 'Рабочая сцена.', 'ONCHANGE' => 'worksUpdated'),
+		'sceneWork' => array('DESCRIPTION' => 'Рабочая сцена.', 'ONCHANGE' => 'worksUpdated'),
 		'scenesList' => array('DESCRIPTION' => 'Список сцен.'),
 		'sceneName' => array('DESCRIPTION' => 'Название текущей сцены.', 'ONCHANGE' => 'propertysUpdated', 'DATA_KEY' => 1),
 		'sceneNameSaved' => array('DESCRIPTION' => 'Последняя сцена.'),
