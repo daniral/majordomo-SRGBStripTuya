@@ -194,8 +194,16 @@ if (!$autoMode) {
 
 // --- Авто режим 
 if ($autoMode && !$this->getProperty('flag')) {
-  $levels = getAutoLevelCct($this, $level, null, $color, null, $sceneName, $dayNightMode);
-  if($levels['level'] !== null && $levels['color'] !== null && $levels['sceneName'] !== null && $levels['dayNightMode'] !== null){
+  $levels = getAutoLevelCct($this, 
+                             $level, 
+                               null,    
+                             $color, 
+                        null, 
+                         $sceneName, 
+                      $dayNightMode
+                    );
+  if($levels['level'] !== null && $levels['color'] !== null
+       && $levels['sceneName'] !== null && $levels['dayNightMode'] !== null){
     if($levels['dayNightMode'] == 1){
       $this->setProperty('color', $levels['color'], 'autoMode');
       $this->setProperty('colorLevel', $levels['colorLevel'], 'autoMode');
