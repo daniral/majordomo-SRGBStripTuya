@@ -56,7 +56,7 @@ foreach ($sceneItems as $item) {
 $menuItems = [
     // Главное меню
     [$objectName, $objectName, '', '', '', '', '', '', '', '', '', 10, [
-        ['Вкл/Выкл', $objectName, 'status', 'switch', '1', '', '', '', '', '', '', 120],
+        ['Вкл/Выкл', $objectName, 'status', 'switch', '1', '', '', '', '', "if (\$new_value) {callMethod('{$objectName}.turnOn');}else{callMethod('{$objectName}.turnOff');}", '', 120],
         ['Цвет', $objectName, 'color', 'color', '', '', '', '', '', "callMethod('{$objectName}.setColor', array('value' => \$new_value));", '', 110],
         ['Яркость', $objectName, 'level', 'sliderbox', '50', 1, 100, 1, '', "callMethod('{$objectName}.setColorLevel', array('value' => \$new_value));", '', 100],
 		['Сцена', $objectName, 'sceneName', 'selectbox', '2', '', '', '', '', '', $sceneNamesExport, 70],

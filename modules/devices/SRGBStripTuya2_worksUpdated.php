@@ -64,7 +64,7 @@ if(in_array($property, ['colorWork']) && !is_null($value)){
 	$level = $data['brightness'];
 	$colorRGB = $data['rgbHex'];
 	$this->setProperty('color', $colorRGB, 'worksUpdated');
-	$this->setProperty('colorSaved', $colorRGB);
+	//$this->setProperty('colorSaved', $colorRGB);
 	$this->setProperty('level', $level, 'worksUpdated');
 }elseif(in_array($property, ['sceneWork']) && !is_null($params['NEW_VALUE'])){
 	$sceneWork = trim($params['NEW_VALUE'], " \t\n\r\0\x0B\"'");
@@ -85,7 +85,7 @@ if(in_array($property, ['colorWork']) && !is_null($value)){
 			// Если значение совпадает, обновляем sceneName
 			if ($sceneWork === $scene) {
 				$sceneNameToSet = $name;
-				$this->setProperty('sceneNameSaved', $sceneNameToSet);
+				//$this->setProperty('sceneNameSaved', $sceneNameToSet);
 				break; // нашли нужную сцену, дальше не ищем
 			}
 		}

@@ -168,19 +168,19 @@
 // --- Дефолтные свойства
 $this->callMethod('byDefault');
 
+$autoMode = ($params['autoMode'] ?? 0) == 1;
+
 $colorSaved = $this->getProperty('colorSaved');
-$color = normalizeRange($params['color']) ?? $colorSaved ?? '#FFFFFF';
+$color = normalizeRange($params['color']) ?? !$autoMode ? $colorSaved ?? '#FFFFFF' : null;
 
 $levelSaved = $this->getProperty('levelSaved');
-$level = normalizeRange($params['level'], 1) ?? $levelSaved ?? 100;
+$level = normalizeRange($params['level'], 1) ?? !$autoMode ? $levelSaved ?? 100 : null;
 
 $sceneNameSaved = $this->getProperty('sceneNameSaved');
-$sceneName = $params['sceneName'] ?? $sceneNameSaved ?? 'Спокойная' ?? null;
+$sceneName = $params['sceneName'] ?? !$autoMode ? $sceneNameSaved ?? 'Спокойная' : null;
 
 $mode = $params['mode'] ?? $this->getProperty('mode') ?? '1';
 $dayNightMode = $params['mode'] ?? null;
-
-$autoMode = ($params['autoMode'] ?? 0) == 1;
 
 // --- Обычный режим (без авто)
 if (!$autoMode) {

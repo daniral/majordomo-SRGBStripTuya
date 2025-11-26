@@ -73,6 +73,7 @@ $property = $params['PROPERTY'] ?? null;
 $status = $this->getProperty('status') ?? 0;
 $sceneName = trim($this->getProperty('sceneName'), " \t\n\r\0\x0B\"'");
 $sceneNameSaved = $this->getProperty('sceneNameSaved') ?? 'unknown';
+$foundName = false;
 
 if(in_array($property, ['color', 'level']) && $value != $this->getProperty($property)){
 	$this->setProperty($property , $value, 'worksUpdated');
@@ -85,13 +86,11 @@ if(in_array($property, ['color', 'level'])){
 	$hsvHex = rgbToHSVhex($value, $level)?: '003c03e801f4';
 	$this->setProperty('colorWork', $hsvHex, 'propertysUpdated');
 	if (!$status) $this->setProperty('status', 1);
-	$this->setProperty($property.'Saved', $property === 'level'?$level:$value);
 }elseif($property=='sceneName' && $sceneName != 'unknown'){
 	// Получаем список сцен и очищаем его от пробелов, кавычек и переводов строк по краям
 	$scenesList = trim($this->getProperty('scenesList'), " \t\n\r\0\x0B\"'");
 	// Разбиваем на отдельные сцены (по запятой или новой строке)
 	$sceneItems = preg_split('/\s*(?:,|\r\n|\n|\r)\s*/', $scenesList, -1, PREG_SPLIT_NO_EMPTY);
-	$foundName = false;
 	foreach ($sceneItems as $item) {
 		// Каждая сцена имеет формат "Имя=Значение"
 		$parts = explode('=', $item, 2); // ограничиваем на 2, чтобы значения с '=' не ломали парсинг
@@ -103,7 +102,6 @@ if(in_array($property, ['color', 'level'])){
 				$foundName = true;
 				$this->setProperty('work_mode', 'scene');
 				$this->setProperty('sceneWork', $scene, 'propertysUpdated');
-				$this->setProperty('sceneNameSaved', $name);
 				if (!$status) $this->setProperty('status', 1);
 				break; // нашли нужную сцену, дальше не ищем
 			}
@@ -113,3 +111,13 @@ if(in_array($property, ['color', 'level'])){
 		$this->setProperty('sceneName', $sceneNameSaved);
 	}
 }
+
+if ($source !== 'autoMode'){
+	$this->setProperty('flag', 1);
+	if(in_array($property, ['color', 'level'])){
+		$this->setProperty($property.'Saved', $property === 'level'?$level:$value);
+	}elseif($foundName){
+		$this->setProperty('sceneNameSaved', $name);
+	}
+}
+	
