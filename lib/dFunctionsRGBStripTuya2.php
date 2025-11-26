@@ -121,12 +121,13 @@ if (!function_exists('initDefaults')) {
 }
 
 /** Получает актуальные значения яркости, CCT, цвета и сцены для авто-режима лампы.
- * @param object      $object      Объект лампы (MajorDoMo object)
- * @param int|null    $level       Принудительное значение яркости (если указано)
- * @param int|null    $cct         Принудительное значение CCT (если указано)
- * @param string|null $color      Принудительное значение цвета (hex или raw Tuya)
- * @param int|null    $colorLevel  Принудительный уровень яркости цветного света
- * @param string|null $sceneName  Принудительное имя сцены
+ * @param object      $object        Объект лампы (MajorDoMo object)
+ * @param int|null    $level         Принудительное значение яркости (если указано)
+ * @param int|null    $cct           Принудительное значение CCT (если указано)
+ * @param string|null $color         Принудительное значение цвета (hex или raw Tuya)
+ * @param int|null    $colorLevel    Принудительный уровень яркости цветного света
+ * @param string|null $sceneName     Принудительное имя сцены
+ * @param int|null    $dayNightMode  Принудительный режим (цвет, сцена)
  *
  * @return array{
  *     level:int|null,
@@ -134,10 +135,11 @@ if (!function_exists('initDefaults')) {
  *     color:string|null,
  *     colorLevel:int|null,
  *     sceneName:string|null
+ * 	   dayNightMode:int|null
  * }
  */
 if (!function_exists('getAutoLevelCct')) {
-	function getAutoLevelCct($object, $level=null, $cct=null, $color=null, $colorLevel=null, $sceneName=null) {
+	function getAutoLevelCct($object, $level=null, $cct=null, $color=null, $colorLevel=null, $sceneName=null, $dayNightMode=null) {
 		$dayBegin=$object->getProperty('dayBegin');
 		$nightBegin=$object->getProperty('nightBegin');
 
@@ -161,14 +163,14 @@ if (!function_exists('getAutoLevelCct')) {
 				$currentLevel = $level ?? $object->getProperty('nightLevel');
 				$currentCct = $cct ?? $object->getProperty('nightCct');
 				$currentSceneName = $sceneName ?? $object->getProperty('nightScene');
-				$currentMode = $object->getProperty('nightMode') ?? '2';
+				$currentMode = $dayNightMode ?? $object->getProperty('nightMode') ?? '2';
 			} elseif(($object->getProperty('workingDay')==1 || $object->getProperty('workingDay')==3) && timeBetween($dayBegin,$nightBegin)) {
 				$currentColor = $color ?? $object->getProperty('dayColor');
 				$currentColorLevel = $colorLevel ?? $object->getProperty('dayColorLevel');
 				$currentLevel=$level ?? $object->getProperty('dayLevel');
 				$currentCct=$cct ?? $object->getProperty('dayCct');
 				$currentSceneName = $sceneName ?? $object->getProperty('dayScene');
-				$currentMode = $object->getProperty('dayMode') ?? '2';
+				$currentMode = $dayNightMode ?? $object->getProperty('dayMode') ?? '2';
 			}
 		} elseif($object->getProperty('workingBy')==3 && $object->getProperty('illuminance')<=$object->getProperty('illuminanceMax')) {
 			$currentColor = $color ?? $object->getProperty('nightColor');
@@ -176,7 +178,7 @@ if (!function_exists('getAutoLevelCct')) {
 			$currentLevel=$level ?? $object->getProperty('nightLevel');
 			$currentCct=$cct ?? $object->getProperty('nightCct');
 			$currentSceneName = $sceneName ?? $object->getProperty('nightScene');
-			$currentMode = $object->getProperty('nightMode') ?? '2';
+			$currentMode = $dayNightMode ?? $object->getProperty('nightMode') ?? '2';
 			$object->setProperty('illuminanceFlag',1);
 		}
 		return ['level'=>$currentLevel,'cct'=>$currentCct,'color'=>$currentColor,'colorLevel'=>$currentColorLevel,'sceneName'=>$currentSceneName,'dayNightMode'=>$currentMode];

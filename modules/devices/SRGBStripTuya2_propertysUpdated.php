@@ -41,9 +41,12 @@
  * @return void
  */
 
+// --- Дефолтные свойства
+$this->callMethod('byDefault');
 
-if ($this->getProperty('level') == '') $this->setProperty('level', '50');
-if ($this->getProperty('color') == '') $this->setProperty('color', '#ffff00');
+$source = strtok($params['SOURCE'], " ") ?? null;
+if($source === 'worksUpdated') return;
+
 $value = $params['NEW_VALUE'];
 $transform = array(
 	'red'      => '#ff0000',
@@ -61,29 +64,24 @@ $transform = array(
 if (isset($transform[$value])) $value = $transform[$value];
 
 $value = normalizeRange($value);
+if ($value === null) return;
+
 $colorSaved = $this->getProperty('colorSaved') ?? '#ffff00';
 $level = normalizeRange($this->getProperty('level'),1);
 $levelSaved = normalizeRange($this->getProperty('levelSaved'),1);
-$source = strtok($params['SOURCE'], " ") ?? null;
 $property = $params['PROPERTY'] ?? null;
 $status = $this->getProperty('status') ?? 0;
 $sceneName = trim($this->getProperty('sceneName'), " \t\n\r\0\x0B\"'");
 $sceneNameSaved = $this->getProperty('sceneNameSaved') ?? 'unknown';
 
-if($source === 'worksUpdated') return;
-
-if(in_array($property, ['color', 'level'])){
-	if(!is_null($value)) {
-		$this->setProperty($property , $value, 'worksUpdated');
-	}else{
-		$this->setProperty($property , $property==='level'?$levelSaved:$colorSaved, 'worksUpdated');
-		return;
-	}
+if(in_array($property, ['color', 'level']) && $value != $this->getProperty($property)){
+	$this->setProperty($property , $value, 'worksUpdated');
 }
 
-if(in_array($property, ['color', 'level']) && !is_null($value)){
+if(in_array($property, ['color', 'level'])){
 	$this->setProperty('work_mode', 'colour');
-	if($property == 'level')  $value = $colorSaved;
+	if($property === 'level')  $value = $colorSaved;
+	if($property === 'color')  $level = $levelSaved;
 	$hsvHex = rgbToHSVhex($value, $level)?: '003c03e801f4';
 	$this->setProperty('colorWork', $hsvHex, 'propertysUpdated');
 	if (!$status) $this->setProperty('status', 1);
