@@ -6,26 +6,22 @@
  * Устанавливаются следующие свойства:
  *
  * --- Основные параметры ---
- * @property string  $color        Цвет лампы в формате HEX (например "#ffff00")
- * @property string  $colorLevel   Яркость цветного режима (0–100)
- * @property string  $level        Общая яркость лампы (0–100)
- * @property string  $cct          Цветовая температура (0–100)
+ * @property string  $color            Цвет лампы в формате HEX (например "#ffff00")
+ * @property string  $level            Яркость (1–100)
  *
  * --- Сцены ---
- * @property string  $scenesList   Список доступных сцен в формате "Имя=HEX,..."
- * @property string  $sceneName    Название текущей выбранной сцены
+ * @property string  $scenesList       Список доступных сцен в формате "Имя=HEX,..."
+ * @property string  $sceneName        Название текущей выбранной сцены
  *
  * --- Дневной режим ---
- * @property string  $dayLevel     Яркость днём (0–100)
- * @property string  $dayCct       Температура днём (0–100)
- * @property string  $dayColor     Цвет днём (HEX)
- * @property string  $dayScene     Сцена для дневного режима
+ * @property string  $dayLevel         Яркость днём (1–100)
+ * @property string  $dayColor         Цвет днём (HEX)
+ * @property string  $dayScene         Сцена для дневного режима
  *
  * --- Ночной режим ---
- * @property string  $nightLevel   Яркость ночью (0–100)
- * @property string  $nightCct     Температура ночью (0–100)
- * @property string  $nightColor   Цвет ночью (HEX)
- * @property string  $nightScene   Сцена для ночного режима
+ * @property string  $nightLevel       Яркость ночью (0–100)
+ * @property string  $nightColor       Цвет ночью (HEX)
+ * @property string  $nightScene       Сцена для ночного режима
  *
  * --- Автоматизация ---
  * @property string  $timerOff         Время авто-выключения лампы (секунды)
@@ -39,12 +35,12 @@
  * @property string  $illuminanceFlag  Включение работы по освещённости (0/1)
  *
  * --- Режимы работы ---
- * @property string  $workingDay   Режим работы лампы (1=день, 2=ночь, 3=круглосуточно)
- * @property string  $workingBy    Источник автоматизации (1=по времени, 2=по солнцу, 3=по датчику)
+ * @property string  $workingDay       Режим работы лампы (1=день, 2=ночь, 3=круглосуточно)
+ * @property string  $workingBy        Источник автоматизации (1=по времени, 2=по солнцу, 3=по датчику)
  *
  * --- Время дня и ночи ---
- * @property string  $dayBegin     Время начала дневного режима (чч:мм)
- * @property string  $nightBegin   Время начала ночного режима (чч:мм)
+ * @property string  $dayBegin         Время начала дневного режима (чч:мм)
+ * @property string  $nightBegin       Время начала ночного режима (чч:мм)
  *
  * --- Данные о солнце ---
  * @property string  $sunriseTime      Время восхода (чч:мм)
@@ -59,8 +55,7 @@
 
 
 $defaults = [
-    'color' => '#ffff00', 'colorLevel' => '100',
-	'level' => '100', 'cct' => '100',
+    'color' => '#ffff00', 'level' => '100',
     'scenesList' => 
        'Спокойная=000e0d0000000000000000c80000,
         Чтение=010e0d0000000000000003e801f4,
@@ -95,17 +90,18 @@ $defaults = [
         Пасха=275a5a020014006403e800000000464602000003e803e800000000323202015e01f403e800000000464602011303e803e800000000,
         Хэллоуин=28464601011303e803e800000000464601001e03e803e800000000',
     'sceneName' => 'Спокойная',
-    'mode' => '2',
 
-    'dayColor' => '#FFFFFF', 'dayColorLevel' => '100',
-    'dayLevel' => '100', 'dayCct' => '0', 
+    'mode' => '1',
+
+    'dayColor' => '#FFFFFF',
+    'dayLevel' => '100', 
     'dayScene' => 'Восход', 
-    'dayMode' => '2',
+    'dayMode' => '1',
 
-    'nightColor' => '#FFFF00', 'nightColorLevel' => '30',
-    'nightLevel' => '30', 'nightCct' => '100', 
+    'nightColor' => '#FFFF00',
+    'nightLevel' => '30', 
     'nightScene' => 'Закат', 
-    'nightMode' => '2',
+    'nightMode' => '1',
 
     'timerOff' => '45', 'autoOnOff' => '1',
     'presence' => '0', 'flag' => '0',

@@ -74,17 +74,17 @@ if (SETTINGS_SITE_LANGUAGE && file_exists(ROOT . 'languages/SRGBStripTuya2_' . S
 	include_once(ROOT . 'languages/SRGBStripTuya2_default.php'); //
 }
 
-$this->device_types['RGBStripTuya'] = array(
-	'TITLE' => 'Освещение(RGB лента Tuya)',
+$this->device_types['RGBStripTuya2'] = array(
+	'TITLE' => 'Освещение(RGB лента Tuya2)',
 	'PARENT_CLASS' => 'SControllers',
 	'CLASS' => 'SRGBStripTuya2',
-	'DESCRIPTION'=>'RGB лента(Tuya)',
+	'DESCRIPTION'=>'RGB лента(Tuya)2',
 	'PROPERTIES' => array(
 		'color' => array('DESCRIPTION' => 'Цвет (RGB).', 'ONCHANGE' => 'propertysUpdated', 'DATA_KEY' => 1),
 		'colorWork' => array('DESCRIPTION' => 'Рабочий цвет (HSV).', 'ONCHANGE' => 'worksUpdated'),
 		'colorSaved' => array('DESCRIPTION' => 'Последний цвет.'),
 
-		'level' => array('DESCRIPTION' => 'Яркость (0<-->100).', 'ONCHANGE' => 'propertysUpdated', 'DATA_KEY' => 1),
+		'level' => array('DESCRIPTION' => 'Яркость (1<-->100).', 'ONCHANGE' => 'propertysUpdated', 'DATA_KEY' => 1),
 		'levelSaved' => array('DESCRIPTION' => 'Последняя яркость.', 'ONCHANGE' => 'propertysUpdated', 'DATA_KEY' => 1),
 
 		'sceneWork' => array('DESCRIPTION' => 'Рабочая сцена.', 'ONCHANGE' => 'worksUpdated'),
@@ -96,14 +96,14 @@ $this->device_types['RGBStripTuya'] = array(
 		'mode' => array('DESCRIPTION' => 'Что включать (цвет, сцена)','_CONFIG_TYPE'=>'select','_CONFIG_OPTIONS'=>'1=Цвет,2=Сцена'),
 
 		'dayColor' => array('DESCRIPTION' => 'Цвет днем', '_CONFIG_TYPE' => 'num',),
-		'dayColorLevel' => array('DESCRIPTION' => 'Уровень яркости цвета днем', '_CONFIG_TYPE' => 'num',),
+		'dayLevel' => array('DESCRIPTION' => 'Уровень яркости днем', '_CONFIG_TYPE' => 'num',),
 		'dayScene' => array('DESCRIPTION' => 'Сцена днем', '_CONFIG_TYPE' => 'num',),
-		'dayMode' => array('DESCRIPTION' => 'Что включать днем (цвет, белый, сцена)','_CONFIG_TYPE'=>'select','_CONFIG_OPTIONS'=>'1=Цвет,2=Белый,3=Сцена'),
+		'dayMode' => array('DESCRIPTION' => 'Что включать днем (цвет, сцена)','_CONFIG_TYPE'=>'select','_CONFIG_OPTIONS'=>'1=Цвет,2=Сцена'),
 
 		'nightColor' => array('DESCRIPTION' => 'Цвет ночью', '_CONFIG_TYPE' => 'num',),
-		'nightColorLevel' => array('DESCRIPTION' => 'Уровень яркости цвета  ночью', '_CONFIG_TYPE' => 'num',),
+		'nightLevel' => array('DESCRIPTION' => 'Уровень яркости ночью', '_CONFIG_TYPE' => 'num',),
 		'nightScene' => array('DESCRIPTION' => 'Сцена ночью', '_CONFIG_TYPE' => 'num',),
-		'nightMode' => array('DESCRIPTION' => 'Что включать ночью (цвет, белый, сцена)','_CONFIG_TYPE'=>'select','_CONFIG_OPTIONS'=>'1=Цвет,2=Белый,3=Сцена'),
+		'nightMode' => array('DESCRIPTION' => 'Что включать ночью (цвет, сцена)','_CONFIG_TYPE'=>'select','_CONFIG_OPTIONS'=>'1=Цвет,2=Сцена'),
 
 		'autoOnOff' => array('DESCRIPTION' => 'Автовключение','_CONFIG_TYPE'=>'select','_CONFIG_OPTIONS'=>'1=Включено,0=Отключено'),
 		'timerOff' => array('DESCRIPTION' => 'Выключить через(сек). 0-не выключать', '_CONFIG_TYPE' => 'num'),
@@ -133,6 +133,7 @@ $this->device_types['RGBStripTuya'] = array(
 		'setLevel' => array('DESCRIPTION' => 'Установить уровень яркости.', '_CONFIG_SHOW' => 1, '_CONFIG_REQ_VALUE' => 1),
 
 		'setColor' => array('DESCRIPTION' => 'Установиьт цвет(HEX).', '_CONFIG_SHOW' => 1, '_CONFIG_REQ_VALUE' => 1),
+		
 		'worksUpdated' => array('DESCRIPTION' => 'Запускается при смене рабочих параметров'),
 		'propertysUpdated' => array('DESCRIPTION' => 'Запускается при смене параметров'),
 

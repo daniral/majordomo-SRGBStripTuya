@@ -1,22 +1,21 @@
 <?php
 /*
-# ** 💡 Лампочка Guver Lanp (Tuya).**  
+# ** 💡 ZigBee лед лента (Tuya).**  
 ## **Простое устройство для MajorDomo.**   
-Добавление в MajorDomo простого устройства для лампочеи Лампочка Guver Lanp (Tuya).  
-Управление цветом, яркостью, теплотой и сценами.   
+Добавление в MajorDomo простого устройства для лед ленты (Tuya).  
+Управление цветом, яркостью и сценами.   
 Расширяет встроенный класс SControllers.  
 Добавляет новый класс **`RGBStripTuya2`**.
 С авто режимом включеня по датчику освещения, восходу/закату солнца или по установленному времени.  
-С заданными цветом, яркостью, теплотой, сценой для дня и ночи.  
+С заданными цветом, яркостью, сценой для дня и ночи.  
 Автовыключение через заданное времени.  
-Авто режим для Дня, Ночи или в течении всего деня.  
+Авто режим для Дня, Ночи или круглосуточно.  
 
 ## ⚙️ Привязка свойств  
 
 - **switch_led   --> status**  
-- **work_mode    --> modeWork**  
+- **work_mode    --> work_mode**  
 - **bright_value --> levelWork**  
-- **temp_value   --> cctWork**  
 - **colour_data  --> colorWork**  
 - **scene_data   --> sceneWork**  
 
@@ -226,11 +225,8 @@ $mode = $this->getProperty('mode') ?? '2';
 if (!$autoMode) {
   if($mode == 1){
     $this->setProperty('color', $color ?? $colorSaved ?? '#FFFFFF', 'noAutoMode');
-    $this->setProperty('colorLevel', $colorLevel ?? $colorLevelSaved ?? 100, 'noAutoMode');
-  }elseif($mode == 2){
     $this->setProperty('level', $level ?? $levelSaved ?? 100, 'noAutoMode');
-    $this->setProperty('cct', $cct ?? $cctSaved ?? 100, 'noAutoMode');
-  }elseif($mode == 3){
+  }elseif($mode == 2){
     $this->setProperty('sceneName', $sceneName ?? $sceneNameSaved ?? 'Спокойная', 'noAutoMode');
   }
 }
@@ -243,9 +239,6 @@ if ($autoMode && !$this->getProperty('flag')) {
       $this->setProperty('color', $levels['color'], 'autoMode');
       $this->setProperty('colorLevel', $levels['colorLevel'], 'autoMode');
     }elseif($levels['dayNightMode'] == 2){
-      $this->setProperty('level', $levels['level'], 'autoMode');
-      $this->setProperty('cct', $levels['cct'], 'autoMode');
-    }elseif($levels['dayNightMode'] == 3){
       $this->setProperty('sceneName', $levels['sceneName'], 'autoMode');
     }
     // --- Авто-выключение
