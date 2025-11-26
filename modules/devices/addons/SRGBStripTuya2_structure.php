@@ -1,6 +1,6 @@
 <?php
 /**
- * Class SRGBStripTuya
+ * Class SRGBStripTuya2
  *
  * Класс устройства RGB-ленты Tuya для MajorDoMo.
  * Наследуется от SControllers. Описывает свойства яркости, цвета,
@@ -68,16 +68,16 @@
  *      Вызывается при изменении рабочих параметров (colorWork / workScene).
  */
 
-if (SETTINGS_SITE_LANGUAGE && file_exists(ROOT . 'languages/SRGBStripTuya_' . SETTINGS_SITE_LANGUAGE . '.php')) {
-	include_once(ROOT . 'languages/SRGBStripTuya_' . SETTINGS_SITE_LANGUAGE . '.php');
+if (SETTINGS_SITE_LANGUAGE && file_exists(ROOT . 'languages/SRGBStripTuya2_' . SETTINGS_SITE_LANGUAGE . '.php')) {
+	include_once(ROOT . 'languages/SRGBStripTuya2_' . SETTINGS_SITE_LANGUAGE . '.php');
 } else {
-	include_once(ROOT . 'languages/SRGBStripTuya_default.php'); //
+	include_once(ROOT . 'languages/SRGBStripTuya2_default.php'); //
 }
 
 $this->device_types['RGBStripTuya'] = array(
 	'TITLE' => 'Освещение(RGB лента Tuya)',
 	'PARENT_CLASS' => 'SControllers',
-	'CLASS' => 'SRGBStripTuya',
+	'CLASS' => 'SRGBStripTuya2',
 	'DESCRIPTION'=>'RGB лента(Tuya)',
 	'PROPERTIES' => array(
 		'color' => array('DESCRIPTION' => 'Цвет (RGB).', 'ONCHANGE' => 'propertysUpdated', 'DATA_KEY' => 1),

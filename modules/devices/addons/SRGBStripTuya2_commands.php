@@ -1,9 +1,9 @@
 <?php
 /**
- * Обрабатывает голосовые команды для устройства типа SRGBStripTuya.
+ * Обрабатывает голосовые команды для устройства типа SRGBStripTuya2.
  *
  * Функция анализирует текст голосовой команды и формирует код выполнения ($run_code)
- * для объекта ленты SRGBStripTuya. Поддерживаются включение, выключение, переключение,
+ * для объекта ленты SRGBStripTuya2. Поддерживаются включение, выключение, переключение,
  * управление яркостью, управлением цветом и сценами.
  *
  * Поддерживаемые возможности:
@@ -25,7 +25,7 @@
  *         - Уменьшает текущий уровень на -10
  *
  * 3. Управление цветом:
- *    - Используются ключевые слова из словаря LANG_SRGBStripTuya_PATTERN_COLOR
+ *    - Используются ключевые слова из словаря LANG_SRGBStripTuya2_PATTERN_COLOR
  *    - Поддерживаемые цвета: красный, зелёный, синий, белый, жёлтый, голубой,
  *      пурпурный, оранжевый, фиолетовый, розовый, лайм.
  *    - Команда вызывает метод setColor(value => <цвет>)
@@ -43,7 +43,7 @@
  *    - При необходимости устанавливает $reply_confirm = 1
  *
  * Ожидаемые входные параметры (передаются извне в область видимости):
- *    @param string $device_type     Тип устройства (должен быть 'SRGBStripTuya')
+ *    @param string $device_type     Тип устройства (должен быть 'SRGBStripTuya2')
  *    @param string $command         Текст голосовой команды пользователя
  *    @param string $linked_object   Имя объекта в MajorDoMo
  *    @param string $device_title    Человекочитаемое название устройства
@@ -58,7 +58,7 @@
  * @return void
  */
 
-if ($device_type == 'SRGBStripTuya') {
+if ($device_type == 'SRGBStripTuya2') {
 
     // --- ВКЛ / ВЫКЛ / ПЕРЕКЛЮЧИТЬ ---
     if (preg_match('/' . LANG_DEVICES_PATTERN_TURNON . '/uis', $command)) {
@@ -81,7 +81,7 @@ if ($device_type == 'SRGBStripTuya') {
     }
 
     // --- ЯРКОСТЬ ---
-    elseif (preg_match('/' . LANG_SRGBStripTuya_PATTERN_BRIGHTNESS . '/uis', $command)) {
+    elseif (preg_match('/' . LANG_SRGBStripTuya2_PATTERN_BRIGHTNESS . '/uis', $command)) {
         $currentLevel = (int)getGlobal("$linked_object.level");
         $step = 10;
         if (preg_match('/(?:\s)(\d{1,2}|100)(?:%|\s|$)/uis', $command, $matches)) {
@@ -102,7 +102,7 @@ if ($device_type == 'SRGBStripTuya') {
     }
 
     // --- ЦВЕТ ---
-    elseif (preg_match('/' . LANG_SRGBStripTuya_PATTERN_COLOR . '/uis', $command)) {
+    elseif (preg_match('/' . LANG_SRGBStripTuya2_PATTERN_COLOR . '/uis', $command)) {
         $colors = array(
             'красн' => 'red', 'зел' => 'green', 'син' => 'blue',
             'бел' => 'white', 'жёлт' => 'yellow', 'желт' => 'yellow',
@@ -126,7 +126,7 @@ if ($device_type == 'SRGBStripTuya') {
     }
 
     // --- СЦЕНЫ ---
-    elseif (preg_match('/' . LANG_SRGBStripTuya_PATTERN_SCENE . '/uis', $command)) {
+    elseif (preg_match('/' . LANG_SRGBStripTuya2_PATTERN_SCENE . '/uis', $command)) {
         $scenesRaw = getGlobal("$linked_object.scenesList");
         if ($scenesRaw) {
             $sceneItems = preg_split('/\s*(?:,|\r\n|\n|\r)\s*/', $scenesRaw, -1, PREG_SPLIT_NO_EMPTY);

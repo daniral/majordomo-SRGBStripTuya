@@ -47,8 +47,6 @@
  * @return void
  */
 
-
-<?php
 if ($this->getProperty('scenesList') === '') {
     $this->setProperty('scenesList',
        'Спокойная=000e0d00002e03e802cc00000000,
