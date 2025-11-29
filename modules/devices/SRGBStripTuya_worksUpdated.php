@@ -84,13 +84,13 @@ if ($this->getProperty('scenesList') === '') {
     );
 }
 
+$source = strtok($params['SOURCE'], " ");
+if($source === 'propertysUpdated') return;
+
 $value = normalizeRange($params['NEW_VALUE'], 1, 1000);
 $level = $this->getProperty('level');
-$source = strtok($params['SOURCE'], " ");
 $property = $params['PROPERTY'];
 $sceneNameToSet = 'unknown';
-
-if($source === 'propertysUpdated') return;
 
 if(in_array($property, ['colorWork']) && !is_null($value)){
 	$data = hsvToRgbHex($value);
