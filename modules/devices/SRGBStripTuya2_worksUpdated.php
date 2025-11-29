@@ -34,7 +34,7 @@
  *
  * Используемые функции:
  * ----------------------
- * - normalizeRange($val, $min, $max) — нормализует числовое значение.
+ * - normalizeRange($val, $min, $max, $type) — нормализует числовое значение.
  * - hsvToRgbHex($hsv) — конвертирует HSV в массив:
  *        ['rgbHex' => string, 'brightness' => int]
  *
@@ -53,7 +53,7 @@ $this->callMethod('byDefault');
 $source = strtok($params['SOURCE'], " ");
 if($source === 'propertysUpdated') return;
 
-$value = normalizeRange($params['NEW_VALUE'], 1, 1000);
+$value = normalizeRange($params['NEW_VALUE'], 1, 1000, 'number');
 $level = $this->getProperty('level');
 $property = $params['PROPERTY'];
 $sceneNameToSet = 'unknown';

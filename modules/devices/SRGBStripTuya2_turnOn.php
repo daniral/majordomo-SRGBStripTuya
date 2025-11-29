@@ -191,7 +191,7 @@ $levelSaved = $this->getProperty('levelSaved');
 $sceneNameSaved = $this->getProperty('sceneNameSaved');
 
 $color = normalizeRange($params['color']) ?? (!$autoMode ? ($colorSaved ?? '#FFFFFF') : null);
-$level = normalizeRange($params['level'], 1) ?? (!$autoMode ? ($levelSaved ?? 100) : null);
+$level = normalizeRange($params['level'], 1, 100, 'number') ?? (!$autoMode ? ($levelSaved ?? 100) : null);
 $sceneName = $params['sceneName'] ?? (!$autoMode ? ($sceneNameSaved ?? 'Спокойная') : null);
 $mode = $params['mode'] ?? (!$autoMode ? ($this->getProperty('mode') ?? '1') : null);
 
