@@ -62,7 +62,7 @@ if ($property === 'colorWork' && !is_null($value)) {
     // Нормализуем значение HSV 
     $colorWorkValue = normalizeRange($value);
     // Проверка, что значение прошло валидацию (не null)
-	if (is_null($colorWorkValue)) { 
+	if (is_null($colorWorkValue)) {
         return; 
     }
     // Преобразуем HSV в RGB Hex и Яркость

@@ -115,7 +115,7 @@ if ($property === 'color' || $property === 'level') {
 	} elseif ($property === 'level') {
 		$norm = normalizeRange($value, 1, 100, 'number');
 	}
-    if ($norm === null) {
+    if (is_null($norm)) {
 		$this->setProperty($property, $this->getProperty($property . 'Saved'), 'worksUpdated');
 		return;
 	}
