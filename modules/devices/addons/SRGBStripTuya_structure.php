@@ -75,7 +75,7 @@ if (SETTINGS_SITE_LANGUAGE && file_exists(ROOT . 'languages/SRGBStripTuya_' . SE
 }
 
 $this->device_types['RGBStripTuya'] = array(
-	'TITLE' => 'Освещение(RGB лента Tuya)',
+	'TITLE' => 'Освещение(Tuya ZigBee LED strip)',
 	'PARENT_CLASS' => 'SControllers',
 	'CLASS' => 'SRGBStripTuya',
 	'DESCRIPTION'=>'RGB лента(Tuya)',
