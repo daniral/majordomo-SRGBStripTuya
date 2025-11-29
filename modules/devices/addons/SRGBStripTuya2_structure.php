@@ -136,6 +136,7 @@ $this->device_types['RGBStripTuya2'] = array(
 		
 		'worksUpdated' => array('DESCRIPTION' => 'Запускается при смене рабочих параметров'),
 		'propertysUpdated' => array('DESCRIPTION' => 'Запускается при смене параметров'),
+		'statusUpdated' => array('DESCRIPTION' => 'Запускается при смене статуса'),
 
 		'byDefault' => array('DESCRIPTION' => 'Установить свойства по умолчанию.'),
 		'createCommandsMenu' => array('DESCRIPTION' => 'Создает меню управления.', '_CONFIG_SHOW' => 1),

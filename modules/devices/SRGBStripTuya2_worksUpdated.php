@@ -57,6 +57,8 @@ $source   = strtok($params['SOURCE'] ?? '', ' ');
 // Защита от рекурсий. 
 if ($source === 'propertysUpdated') return;
 
+$this->setProperty('flag', 1);
+
 //  Обработка colorWork: HSV -> RGB/Level ---
 if ($property === 'colorWork' && !is_null($value)) {
     // Нормализуем значение HSV 
