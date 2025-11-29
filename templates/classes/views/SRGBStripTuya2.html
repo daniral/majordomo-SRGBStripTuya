@@ -107,7 +107,8 @@
     function sendNewColor%.object_id%(val) {
 		let lamp = window.rgbStripTuya%.object_id%;
 		lamp.currentColor = val;  
-        setGlobal('%.object_title%.color', val);
+    //callMethod('%.object_title%.setColor', 'value=' + encodeURIComponent(val));
+    setGlobal('%.object_title%.color', val);
 		// обновляем цвет фона у слайдера ЯРКОСТИ ЦВЕТА
 		updateSliderFill('#rgbStripTuya%.object_id%_level', lamp.level, val);
     }
@@ -125,10 +126,10 @@
     function sendNewLevel%.object_id%() {
         let lamp = window.rgbStripTuya%.object_id%;
         lamp.dragging = false;
-
         clearTimeout(lamp.levelTimeout);
         lamp.levelTimeout = setTimeout(() => {
-            callMethod('%.object_title%.setLevel', 'value=' + lamp.level);
+        //callMethod('%.object_title%.setLevel', 'value=' + lamp.level);
+        setGlobal('%.object_title%.level', lamp.level);
         }, 500);
     }
 
@@ -136,23 +137,18 @@
     function populateSceneSelect%.object_id%() {
         const select = document.getElementById('sceneSelect%.object_id%');
         if (!select) return;
-
         const lamp = window.rgbStripTuya%.object_id%;
         let sceneStr = getGlobal('%.object_title%.scenesList');
         let currentSceneName = getGlobal('%.object_title%.sceneName') || 'none';
         lamp.currentSceneName = currentSceneName;
-
         lamp.scenes = [];
-
         if (sceneStr && typeof sceneStr === 'string') {
             sceneStr.split(',').forEach(item => {
                 const name = item.split('=')[0].trim();
                 if (name) lamp.scenes.push(name);
             });
         }
-
         select.innerHTML = '';
-
         if (lamp.scenes.length === 0) {
             const opt = document.createElement('option');
             opt.disabled = true;
@@ -161,7 +157,6 @@
             select.appendChild(opt);
             return;
         }
-
         // Если текущая сцена неизвестна
         if (currentSceneName === 'unknown') {
             const unknownOpt = document.createElement('option');
@@ -170,7 +165,6 @@
             unknownOpt.selected = true;
             select.appendChild(unknownOpt);
         }
-
         // Добавляем все сцены и подсветку активной
         lamp.scenes.forEach(name => {
             const opt = document.createElement('option');
@@ -184,7 +178,6 @@
             select.appendChild(opt);
         });
     }
-
     function sendScene%.object_id%(sceneName) {
         const lamp = window.rgbStripTuya%.object_id%;
         if (!sceneName) {

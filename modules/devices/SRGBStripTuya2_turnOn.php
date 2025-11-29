@@ -1,5 +1,5 @@
 <?php
-/*
+/* Описание устройства
 # 💡 Led лента (Tuya)
 ### Простое устройство для MajorDoMo  
 
@@ -22,8 +22,8 @@
 |----------------|----------------------|-------------------------------------------- | 
 | `switch_led`   | `status`             | Включение / выключение лампы                | 
 | `work_mode`    | `work_mode`          | Режим работы (белый, цветной, сцена и т.п.) | 
-| `colour_data`  | `colorWork`        | Цвет RGB в HEX                              | 
-| `scene_data`   | `sceneWork`          | Активная сцена                              | 
+| `colour_data`  | `colour_data`        | Цвет RGB в HEX                              | 
+| `scene_data`   | `workScene`          | Активная сцена                              | 
 
 `После привязки свойств надо поизменять свойства из приложения   
     чтобы прилетели данные в объект`.  
@@ -35,14 +35,22 @@
 - Без параметров : 
   - colorSaved       если не заполнено - #ffff00  
   - levelSaved       если не заполнено - 100  
-  - sceneNameSaved   если не заполнено - Спокойная  
-
+  - sceneNameSaved   если не заполнено - Синее небо  
+  - mode             если не заполнено - 1 (цвет)  
+  
 - С параметрами:  
-  - callMethod('имя объекта.turnOn', array('level'=> 1<-->100,   
-                                           'color'=> 1<-->100,  
-                                           'sceneName'=> имя из списка сцен));  
- 
+  - callMethod('имя объекта.turnOn', array('level'=> '1<-->100',   
+                                           'color'=> '#RRGGBB' или '#RGB' или присет,  
+                                           'sceneName'=> 'имя из списка сцен',
+										                       'mode' => '1-цвет,2-сцена')); 
+										   
+  - Пример: callMethod('имя объекта.turnOn',array('level'=> '50',   
+												                          'color'=> '#FFFF00',  
+											                            'sceneName' => 'Лес',  
+											                            'mode' => '1' 
+											                            ));  
   **Устанавливается flag=1. Стопер который не дает запускаться авто режиму.**  
+  **Что бы снять флаг надо запустить метод turnOff**  
 
 ### **АВТО РЕЖИМ:**  
 
@@ -77,9 +85,11 @@
     - ***Работу по датчику освещения не проверял так как не имеется в наличии.***   
 - **Можно запустить авто режим с параметрами:**  
     - callMethod('имя объекта.turnOn', array('autoMode'=>1,  
-                                             'level'=> 1<-->100,   
-                                             'color'=> 1<-->100,  
-                                             'sceneName'=> имя из списка сцен));  
+                                             'level'=> '1<-->100',   
+                                             'color'=> '#RRGGBB' или '#RGB' или присет,  
+                                             'sceneName'=> 'имя из списка сцен',  
+											                       'mode' => '1-цвет,2-сцена'  
+											                       ));  
 
 ## **🎨 СЦЕНЫ:**  
 
@@ -89,15 +99,16 @@
   - Можно редактировать список вручную, добавлять свои сцены или полностью заменить его.  
 **Пример:**
   "Спокойная=000e0d0000000000000000c80000,
-  Чтение=010e0d0000000000000003e801f4,
-  Работа=020e0d0000000000000003e803e8"
+   Чтение=010e0d0000000000000003e801f4,
+   Работа=020e0d0000000000000003e803e8"
 
 ---
 
 🏷 `sceneName` - Хранит **имя текущей активной сцены**. 
   - Можно установить сцену по имени (Majordomo автоматически подставит нужный код).  
   - Если указанное имя отсутствует в списке — установится **последняя сохранённая сцена**.  
-  - Если в `sceneName` записано `"unknown"` — в интерфейсе отображается **«Неизвестная сцена»**, но список сцен остаётся доступен для выбора.
+  - Если в `sceneName` записано `"unknown"` — в интерфейсе отображается **«Неизвестная сцена»**, 
+	но список сцен остаётся доступен для выбора.  
 
 ## **🔧 МЕТОДЫ:**  
 
@@ -114,7 +125,12 @@
       — выключает её.  
 
 - **setColor**   
-  - Установить цвет.(array("value"=> '#RRGGBB'))  
+  - Установить цвет.(array("value"=> '#RRGGBB' или '#RGB' или присет))  
+    - Значение цвета может быть:  
+      - шестнадцатеричным кодом формата `#RRGGBB`  или '#RGB';  
+      - именем предустановленного цвета (присет):  
+          + 'red', 'green', 'blue', 'white', 'yellow', 'cyan', 
+          + 'magenta', 'orange', 'purple', 'pink', 'lime'.  
     - **flag=1** - авто режим и автовыключение не запустится.  
 - **setLevel**   
   - Установить яркость цвета.(array("value"=> 1 <--> 100 %))  
@@ -141,13 +157,14 @@
 */
 
 
-/**
+/** PhpDoc
  *
  * @param array $params Массив входных параметров для управления лампой:
- *   - int|null   $params['level']       Уровень яркости (1–100).
- *   - string|null $params['color']      Цвет в HEX формате (например, '#FFFFFF').
- *   - string|null $params['sceneName']  Название сцены (например, 'Спокойная').
- *   - bool|int   $params['autoMode']    Включение авто режима (1 — включен, 0 — выключен).
+ *   - bool|int    $params['autoMode']    Включение авто режима (1 — включен, 0 — выключен).
+ *   - int|null    $params['level']       Уровень яркости (1–100).
+ *   - string|null $params['color']       Цвет в HEX формате ('#FFFFFF').
+ *   - string|null $params['sceneName']   Название сцены ('Степь').
+ *   - string|int  $params['mode']        Включение цвета или сцены (1 — цвет, 2 — сцена).
  *
  * @property string $color         Текущий цвет лампы (HEX), сохраняется при режиме color.
  * @property int    $level         Уровень яркости белого света (1–100).
@@ -167,20 +184,16 @@
 
 // --- Дефолтные свойства
 $this->callMethod('byDefault');
-
 $autoMode = ($params['autoMode'] ?? 0) == 1;
 
 $colorSaved = $this->getProperty('colorSaved');
-$color = normalizeRange($params['color']) ?? !$autoMode ? $colorSaved ?? '#FFFFFF' : null;
-
 $levelSaved = $this->getProperty('levelSaved');
-$level = normalizeRange($params['level'], 1) ?? !$autoMode ? $levelSaved ?? 100 : null;
-
 $sceneNameSaved = $this->getProperty('sceneNameSaved');
-$sceneName = $params['sceneName'] ?? !$autoMode ? $sceneNameSaved ?? 'Спокойная' : null;
 
-$mode = $params['mode'] ?? $this->getProperty('mode') ?? '1';
-$dayNightMode = $params['mode'] ?? null;
+$color = normalizeRange($params['color']) ?? (!$autoMode ? ($colorSaved ?? '#FFFFFF') : null);
+$level = normalizeRange($params['level'], 1) ?? (!$autoMode ? ($levelSaved ?? 100) : null);
+$sceneName = $params['sceneName'] ?? (!$autoMode ? ($sceneNameSaved ?? 'Спокойная') : null);
+$mode = $params['mode'] ?? (!$autoMode ? ($this->getProperty('mode') ?? '1') : null);
 
 // --- Обычный режим (без авто)
 if (!$autoMode) {
@@ -194,20 +207,12 @@ if (!$autoMode) {
 
 // --- Авто режим 
 if ($autoMode && !$this->getProperty('flag')) {
-  $levels = getAutoLevelCct($this, 
-                             $level, 
-                               null,    
-                             $color, 
-                        null, 
-                         $sceneName, 
-                      $dayNightMode
-                    );
-  if($levels['level'] !== null && $levels['color'] !== null
-       && $levels['sceneName'] !== null && $levels['dayNightMode'] !== null){
-    if($levels['dayNightMode'] == 1){
+  $levels = getAutoLevelCct($this, $level, null, $color, null, $sceneName, $mode);
+  if($levels['mode'] !== null){
+    if($levels['mode'] == 1 && $levels['level'] !== null && $levels['color'] !== null){
+      $this->setProperty('level', $levels['level'], 'autoMode');
       $this->setProperty('color', $levels['color'], 'autoMode');
-      $this->setProperty('colorLevel', $levels['colorLevel'], 'autoMode');
-    }elseif($levels['dayNightMode'] == 2){
+    }elseif($levels['mode'] == 2 && $levels['sceneName'] !== null){
       $this->setProperty('sceneName', $levels['sceneName'], 'autoMode');
     }
     // --- Авто-выключение

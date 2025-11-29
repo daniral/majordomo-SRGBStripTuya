@@ -1,7 +1,7 @@
 <?php
 /** Краткое описание всех функций
  *
- * normalizeRange($val, $min, $max) — Проверяет и нормализует значение (число или HEX) в заданный диапазон.
+ * normalizeRange($val, $min, $max, $type) — Проверяет и нормализует значение (число или HEX) в заданный диапазон.
  * dimmerTime($time, $addTime, $sign) — Вычисляет новое время с поправкой (добавить/вычесть HH:MM).
  * autoOff($object, $timer, $flag, $presence) — Запускает таймер автоотключения лампы.
  * initDefaults($object, $defaults) — Инициализирует свойства объекта по умолчанию.
@@ -26,7 +26,7 @@
  *--------------------------------------------------------------------------------------------
  *| Функция             | Назначение                                                         |
  *| ------------------- | -------------------------------------------------------------------|
- *| `normalizeRange`    | Нормализует число или HEX в диапазон                               |
+ *| `normalizeRange`    | Нормализует HEX или число в диапазон                               |
  *| `dimmerTime`        | Корректирует время с учётом смещения                               |
  *| `autoOff`           | Таймер автоотключения лампы                                        |
  *| `initDefaults`      | Устанавливает свойства объекта по умолчанию                        |
@@ -40,26 +40,51 @@
  */
 //
 
-
 /** Проверяет и нормализует значение: числовое или HEX (цвет/яркость).
- * normalizeRange($val, $min, $max) 
- * @param mixed $val  Входное значение (число или HEX)
- * @param int $min    Минимальное значение диапазона
- * @param int $max    Максимальное значение диапазона
- * @return int|string|null Возвращает нормализованное число или HEX, либо null если невалидно
- */
- if (!function_exists('normalizeRange')) {
-	function normalizeRange($val, $min = 0, $max = 100) {
+* 
+* Функция поддерживает:
+* * Числовые значения в диапазоне $min..$max
+* * HEX цвета (#RGB, #RRGGBB)
+* * 12-значные HEX (например MAC-like)
+*
+* @param mixed  $val  Входное значение (число или HEX)
+* @param int    $min  Минимальное значение диапазона для чисел
+* @param int    $max  Максимальное значение диапазона для чисел
+* @param string $type Тип значения: 'auto' (определяется автоматически), 'number' (число), 'color' (HEX цвет)
+* @return int|string|null Возвращает:
+* 
+* нормализованное число в диапазоне $min..$max,
+* HEX цвет в формате #RRGGBB,
+* 12-значный HEX как есть,
+* или null, если значение невалидно
+*/
+if (!function_exists('normalizeRange')) {
+	function normalizeRange($val, $min = 0, $max = 100, $type = 'auto') {
 		$val = strtolower(trim($val));
-		if (preg_match('/^[0-9a-f]{12}$/i', $val)) {
-			return $val;
-		} elseif (preg_match('/^#?[0-9a-f]{6}$/i', $val)) {
-			return $val;
-		} elseif (is_numeric($val)) {
-			return (int)max($min, min($max, $val));
-		} else {
-			return null;
+		if ($type === 'number') {
+			// числовое значение
+			if (is_numeric($val)) {
+				return (int)max($min, min($max, $val));
+			}
+			return null; // не число
 		}
+		if ($type === 'color' || $type === 'auto') {
+			// 12-значный HEX (например MAC-like)
+			if (preg_match('/^[0-9a-f]{12}$/i', $val)) {
+				return $val;
+			}
+			// Убираем # для проверки HEX
+			$hex = ltrim($val, '#');
+			// Длинный HEX #RRGGBB
+			if (preg_match('/^[0-9a-f]{6}$/i', $hex)) {
+				return '#' . $hex;
+			}
+			// Короткий HEX #RGB — разворачиваем в длинный #RRGGBB
+			if (preg_match('/^[0-9a-f]{3}$/i', $hex)) {
+				return '#' . $hex[0] . $hex[0] . $hex[1] . $hex[1] . $hex[2] . $hex[2];
+			}
+		}
+		return null; // всё остальное — невалидно
 	}
 }
 
@@ -120,70 +145,101 @@ if (!function_exists('initDefaults')) {
 	}
 }
 
-/** Получает актуальные значения яркости, CCT, цвета и сцены для авто-режима лампы.
- * @param object      $object        Объект лампы (MajorDoMo object)
- * @param int|null    $level         Принудительное значение яркости (если указано)
- * @param int|null    $cct           Принудительное значение CCT (если указано)
- * @param string|null $color         Принудительное значение цвета (hex или raw Tuya)
- * @param int|null    $colorLevel    Принудительный уровень яркости цветного света
- * @param string|null $sceneName     Принудительное имя сцены
- * @param int|null    $dayNightMode  Принудительный режим (цвет, сцена)
+/** Определяет оптимальные параметры освещения для устройства (яркость, CCT, цвет,
+ * уровень цвета, сцена, режим день/ночь) на основе текущего времени,
+ * настроек устройства и режима работы автоматики.
  *
- * @return array{
- *     level:int|null,
- *     cct:int|null,
- *     color:string|null,
- *     colorLevel:int|null,
- *     sceneName:string|null,
- * 	   dayNightMode:int|null
- * }
- * 
+ * Логика работы:
+ *  - Если workingBy = 2: используется режим по солнцу (восход/закат + смещения).
+ *  - Если workingBy != 3: выбор между "днём" и "ночью" на основе timeBetween().
+ *  - Если workingBy = 3: используется датчик освещённости (illuminance).
+ *  - Переданные аргументы ($level, $cct, $color...) имеют приоритет перед настройками.
+ *
+ * Возвращает массив настроек света:
+ * [
+ *     'level'        => int|null,       // Яркость (0–100 или null)
+ *     'cct'          => int|null,       // Температура белого (м.до K)
+ *     'color'        => string|null     // HEX или RGB, если устройство цветное
+ *     'colorLevel'   => int|null,       // Яркость цветного режима
+ *     'sceneName'    => string|null     // Название сцены
+ *     'mode'         => int|string|null // Что включать(цвет,белый,сцена)
+ * ]
+ *
+ * @param object $object           Объект MajorDoMo, поддерживающий getProperty() и setProperty().
+ * @param int|null $level          Принудительная яркость (приоритетно).
+ * @param int|null $cct            Принудительная цветовая температура.
+ * @param string|null $color       Принудительный цвет RGB/HEX.
+ * @param int|null $colorLevel     Принудительная яркость цветного режима.
+ * @param string|null $sceneName   Принудительная сцена.
+ * @param int|string|null $mode    Принудительный что включать(цвет,белый,сцена)
+ *
+ * @return array Ассоциативный массив итоговых параметров освещения.
  */
 if (!function_exists('getAutoLevelCct')) {
-	function getAutoLevelCct($object, $level=null, $cct=null, $color=null, $colorLevel=null, $sceneName=null, $dayNightMode=null) {
-		$dayBegin=$object->getProperty('dayBegin');
-		$nightBegin=$object->getProperty('nightBegin');
+    function getAutoLevelCct(
+        $object,
+        $level = null,
+        $cct = null,
+        $color = null,
+        $colorLevel = null,
+        $sceneName = null,
+        $mode = null
+		){
+        // Кэшируем свойства, чтобы не дергать getProperty каждый раз
+        $p = function($name) use ($object) { return $object->getProperty($name); };
+        // Определяем начало дня и ночи
+        $dayBegin   = $p('dayBegin');
+        $nightBegin = $p('nightBegin');
+        if ($p('workingBy') == 2 && $p('sunriseTime') != $p('sunsetTime')) {
+            $dayBegin   = dimmerTime($p('sunriseTime'), $p('addTimeSunrise'), $p('signSunrise'));
+            $nightBegin = dimmerTime($p('sunsetTime'), $p('addTimeSunset'), $p('signSunset'));
+        }
+        // Режим работы
+        $workingBy  = $p('workingBy');
+        $workingDay = $p('workingDay');
+        // Итоговые переменные
+        $res = [
+            'level'        => null,
+            'cct'          => null,
+            'color'        => null,
+            'colorLevel'   => null,
+            'sceneName'    => null,
+            'mode'         => null
+        ];
+        // ---------- Режим по освещённости ----------
+        if ($workingBy == 3) {
+            if ($p('illuminance') <= $p('illuminanceMax')) {
+                // Используем ночные настройки
+                $res['color']        = $color ?? $p('nightColor');
+                $res['colorLevel']   = $colorLevel ?? $p('nightColorLevel');
+                $res['level']        = $level ?? $p('nightLevel');
+                $res['cct']          = $cct ?? $p('nightCct');
+                $res['sceneName']    = $sceneName ?? $p('nightScene');
+                $res['mode']         = $mode ?? $p('nightMode') ?? '2';
 
-		if($object->getProperty('workingBy')==2 &&
-		   $object->getProperty('sunriseTime')!=$object->getProperty('sunsetTime')) {
-			$dayBegin=dimmerTime($object->getProperty('sunriseTime'),$object->getProperty('addTimeSunrise'),$object->getProperty('signSunrise'));
-			$nightBegin=dimmerTime($object->getProperty('sunsetTime'),$object->getProperty('addTimeSunset'),$object->getProperty('signSunset'));
-		}
-
-		$currentColor = null;
-		$currentColorLevel = null;
-		$currentLevel = null;
-		$currentCct = null;
-		$currentSceneName = null;
-		$currentMode = null;
-
-		if($object->getProperty('workingBy')!=3) {
-			if(($object->getProperty('workingDay')==2 || $object->getProperty('workingDay')==3) && timeBetween($nightBegin,$dayBegin)) {
-				$currentColor = $color ?? $object->getProperty('nightColor');
-				$currentColorLevel = $colorLevel ?? $object->getProperty('nightColorLevel');
-				$currentLevel = $level ?? $object->getProperty('nightLevel');
-				$currentCct = $cct ?? $object->getProperty('nightCct');
-				$currentSceneName = $sceneName ?? $object->getProperty('nightScene');
-				$currentMode = $dayNightMode ?? $object->getProperty('nightMode') ?? '2';
-			} elseif(($object->getProperty('workingDay')==1 || $object->getProperty('workingDay')==3) && timeBetween($dayBegin,$nightBegin)) {
-				$currentColor = $color ?? $object->getProperty('dayColor');
-				$currentColorLevel = $colorLevel ?? $object->getProperty('dayColorLevel');
-				$currentLevel=$level ?? $object->getProperty('dayLevel');
-				$currentCct=$cct ?? $object->getProperty('dayCct');
-				$currentSceneName = $sceneName ?? $object->getProperty('dayScene');
-				$currentMode = $dayNightMode ?? $object->getProperty('dayMode') ?? '2';
-			}
-		} elseif($object->getProperty('workingBy')==3 && $object->getProperty('illuminance')<=$object->getProperty('illuminanceMax')) {
-			$currentColor = $color ?? $object->getProperty('nightColor');
-			$currentColorLevel = $colorLevel ?? $object->getProperty('nightColorLevel');
-			$currentLevel=$level ?? $object->getProperty('nightLevel');
-			$currentCct=$cct ?? $object->getProperty('nightCct');
-			$currentSceneName = $sceneName ?? $object->getProperty('nightScene');
-			$currentMode = $dayNightMode ?? $object->getProperty('nightMode') ?? '2';
-			$object->setProperty('illuminanceFlag',1);
-		}
-		return ['level'=>$currentLevel,'cct'=>$currentCct,'color'=>$currentColor,'colorLevel'=>$currentColorLevel,'sceneName'=>$currentSceneName,'dayNightMode'=>$currentMode];
-	}
+                $object->setProperty('illuminanceFlag', 1);
+            }
+            return $res;
+        }
+        // ---------- Режим по времени ----------
+        $isNight = ($workingDay == 2 || $workingDay == 3) && timeBetween($nightBegin, $dayBegin);
+        $isDay   = ($workingDay == 1 || $workingDay == 3) && timeBetween($dayBegin, $nightBegin);
+        if ($isNight) {
+            $suffix = 'night';
+        } elseif ($isDay) {
+            $suffix = 'day';
+        } else {
+            return $res; // ничего не подходит
+        }
+        // Автоматически подставляем day/night
+        $res['color']        = $color ?? $p("{$suffix}Color");
+        $res['colorLevel']   = $colorLevel ?? $p("{$suffix}ColorLevel");
+        $res['level']        = $level ?? $p("{$suffix}Level");
+        $res['cct']          = $cct ?? $p("{$suffix}Cct");
+        $res['sceneName']    = $sceneName ?? $p("{$suffix}Scene");
+        $res['mode']         = $mode ?? $p("{$suffix}Mode") ?? '2';
+        return $res;
+    }
 }
 
 /** Универсальное изменение свойств (яркость, температура и т.п.)
