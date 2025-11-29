@@ -180,7 +180,7 @@ if ($property === 'scenesList') {
     $valid = [];
     foreach ($items as $item) {
         $item = trim($item);
-        if ($item === '' || !str_contains($item, '=')) continue;
+        if ($item === '' || strpos($item, '=') === false) continue;
         [$name, $val] = array_map('trim', explode('=', $item, 2));
         if ($name !== '' && $val !== '') {
             $valid[] = "$name=$val";
