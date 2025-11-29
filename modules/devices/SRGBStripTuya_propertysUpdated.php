@@ -41,9 +41,9 @@
  * @return void
  */
 
-
 if ($this->getProperty('level') == '') $this->setProperty('level', '50');
 if ($this->getProperty('color') == '') $this->setProperty('color', '#ffff00');
+
 $value = $params['NEW_VALUE'];
 $transform = array(
 	'red'      => '#ff0000',
