@@ -34,6 +34,12 @@
 | `setLevel`  | Установить яркость    | `callMethod('Имя Объекта.setLevel', array("value"=>1--100));`  |
 | `setColor`  | Установить цвет       | `callMethod('Имя Объекта.setColor', array("value"=>#RRGGBB));` |
 
+    - Значение цвета может быть:  
+      - шестнадцатеричным кодом формата `#RRGGBB`;  
+      - именем предустановленного цвета:  
+        + 'red', 'green', 'blue', 'white', 'yellow', 'cyan',  
+        + 'magenta', 'orange', 'purple', 'pink', 'lime'.  
+        
 ---
 
 ## 🎨 Работа со сценами
