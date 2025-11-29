@@ -23,6 +23,7 @@
  * @return void
  */
 
-if (!isset($params['color']) && !isset($params['value'])) return;
+$color = $params['color'] ?? $params['value'] ?? null;
+if ($level === null) return;
 
-$this->setProperty('color', $params['color'] ?? $params['value']);
+$this->setProperty('color', $color);
