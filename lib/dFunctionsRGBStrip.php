@@ -1,6 +1,6 @@
 <?php
 /**
- * normalizeRange($val, $min, $max) — Проверяет и нормализует значение (число или HEX) в заданный диапазон.
+ * normalizeRange($val, $min, $max, $type) — Проверяет и нормализует значение (число или HEX) в заданный диапазон.
  * adjustProperty($obj, $property, $value, $direction, $defaultStep, $min, $max) - Универсальное изменение свойства (увеличить/уменьшить)
  * hsvToRgbHex($hsvHex) - Конвертирует 12-значный Tuya HSV в RGB HEX и яркость.
  * rgbToHSVhex($rgbHex, $brightness) - Конвертирует RGB HEX + яркость в Tuya HSV (12 hex цифр).
@@ -16,24 +16,50 @@
  *///
 
 /** Проверяет и нормализует значение: числовое или HEX (цвет/яркость).
- * normalizeRange($val, $min, $max) 
- * @param mixed $val  Входное значение (число или HEX)
- * @param int $min    Минимальное значение диапазона
- * @param int $max    Максимальное значение диапазона
- * @return int|string|null Возвращает нормализованное число или HEX, либо null если невалидно
- */
- if (!function_exists('normalizeRange')) {
-	function normalizeRange($val, $min = 0, $max = 100) {
+* 
+* Функция поддерживает:
+* * Числовые значения в диапазоне $min..$max
+* * HEX цвета (#RGB, #RRGGBB)
+* * 12-значные HEX (например MAC-like)
+*
+* @param mixed  $val  Входное значение (число или HEX)
+* @param int    $min  Минимальное значение диапазона для чисел
+* @param int    $max  Максимальное значение диапазона для чисел
+* @param string $type Тип значения: 'auto' (определяется автоматически), 'number' (число), 'color' (HEX цвет)
+* @return int|string|null Возвращает:
+* 
+* нормализованное число в диапазоне $min..$max,
+* HEX цвет в формате #RRGGBB,
+* 12-значный HEX как есть,
+* или null, если значение невалидно
+*/
+if (!function_exists('normalizeRange')) {
+	function normalizeRange($val, $min = 0, $max = 100, $type = 'auto') {
 		$val = strtolower(trim($val));
-		if (preg_match('/^[0-9a-f]{12}$/i', $val)) {
-			return $val;
-		} elseif (preg_match('/^#?[0-9a-f]{6}$/i', $val)) {
-			return $val;
-		} elseif (is_numeric($val)) {
-			return (int)max($min, min($max, $val));
-		} else {
-			return null;
+		if ($type === 'number') {
+			// числовое значение
+			if (is_numeric($val)) {
+				return (int)max($min, min($max, $val));
+			}
+			return null; // не число
 		}
+		if ($type === 'color' || $type === 'auto') {
+			// 12-значный HEX (например MAC-like)
+			if (preg_match('/^[0-9a-f]{12}$/i', $val)) {
+				return $val;
+			}
+			// Убираем # для проверки HEX
+			$hex = ltrim($val, '#');
+			// Длинный HEX #RRGGBB
+			if (preg_match('/^[0-9a-f]{6}$/i', $hex)) {
+				return '#' . $hex;
+			}
+			// Короткий HEX #RGB — разворачиваем в длинный #RRGGBB
+			if (preg_match('/^[0-9a-f]{3}$/i', $hex)) {
+				return '#' . $hex[0] . $hex[0] . $hex[1] . $hex[1] . $hex[2] . $hex[2];
+			}
+		}
+		return null; // всё остальное — невалидно
 	}
 }
 

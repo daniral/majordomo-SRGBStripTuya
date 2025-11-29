@@ -87,7 +87,7 @@ $this->device_types['RGBStripTuya'] = array(
 		'levelSaved' => array('DESCRIPTION' => 'Последняя яркость.', 'ONCHANGE' => 'propertysUpdated', 'DATA_KEY' => 1),
 		'work_mode' => array('DESCRIPTION' => 'Режим работы.'),
 		'sceneWork' => array('DESCRIPTION' => 'Рабочая сцена.', 'ONCHANGE' => 'worksUpdated'),
-		'scenesList' => array('DESCRIPTION' => 'Список сцен.'),
+		'scenesList' => array('DESCRIPTION' => 'Список сцен.', 'ONCHANGE' => 'propertysUpdated'),
 		'sceneName' => array('DESCRIPTION' => 'Название текущей сцены.', 'ONCHANGE' => 'propertysUpdated', 'DATA_KEY' => 1),
 		'sceneNameSaved' => array('DESCRIPTION' => 'Последняя сцена.'),
 	),
