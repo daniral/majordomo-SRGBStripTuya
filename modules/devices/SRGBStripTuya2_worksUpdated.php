@@ -51,22 +51,16 @@
 $this->callMethod('byDefault');
 
 $property = $params['PROPERTY'] ?? null;
-$value    = $params['NEW_VALUE'] ?? null;
+$value    = $property === 'colorWork' ? normalizeRange($value) : $params['NEW_VALUE'] ?? null;
 $source   = strtok($params['SOURCE'] ?? '', ' ');
 
 // Защита от рекурсий. 
-if ($source === 'propertysUpdated') return;
+if ($source === 'propertysUpdated' || is_null($value)) return;
 
 $this->setProperty('flag', 1);
 
 //  Обработка colorWork: HSV -> RGB/Level ---
-if ($property === 'colorWork' && !is_null($value)) {
-    // Нормализуем значение HSV 
-    $colorWorkValue = normalizeRange($value);
-    // Проверка, что значение прошло валидацию (не null)
-	if (is_null($colorWorkValue)) {
-        return; 
-    }
+if ($property === 'colorWork' ) {
     // Преобразуем HSV в RGB Hex и Яркость
     $data = hsvToRgbHex($colorWorkValue);
     $colorRGB = $data['rgbHex'];
@@ -79,7 +73,7 @@ if ($property === 'colorWork' && !is_null($value)) {
     return; // Завершаем работу, если обработано colorWork
 }
 //  Обработка sceneWork: Код Сцены -> Имя Сцены ---
-if ($property === 'sceneWork' && !is_null($value)) {
+if ($property === 'sceneWork') {
     $sceneWork = trim($value, " \t\n\r\0\x0B\"'");
     $scenesListRaw = $this->getProperty('scenesList');
     // Разбиваем список сцен на ассоциативный массив [код_сцены => имя_сцены]

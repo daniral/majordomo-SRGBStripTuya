@@ -98,9 +98,9 @@
   - Если свойство `scenesList` пустое — оно автоматически заполнится дефолтными сценами.  
   - Можно редактировать список вручную, добавлять свои сцены или полностью заменить его.  
 **Пример:**
-  "Спокойная=000e0d0000000000000000c80000,
-   Чтение=010e0d0000000000000003e801f4,
-   Работа=020e0d0000000000000003e803e8"
+  "Спокойной ночи=000e0d00002e03e802cc00000000,
+   Чтение=010e0d000084000003e800000000,
+   Осенняя прохлада=0b000000000f019003e800000000"
 
 ---
 
@@ -192,7 +192,7 @@ $sceneNameSaved = $this->getProperty('sceneNameSaved');
 
 $color = normalizeRange($params['color']) ?? (!$autoMode ? ($colorSaved ?? '#FFFFFF') : null);
 $level = normalizeRange($params['level'], 1, 100, 'number') ?? (!$autoMode ? ($levelSaved ?? 100) : null);
-$sceneName = $params['sceneName'] ?? (!$autoMode ? ($sceneNameSaved ?? 'Спокойная') : null);
+$sceneName = $params['sceneName'] ?? (!$autoMode ? ($sceneNameSaved ?? 'Синее небо') : null);
 $mode = $params['mode'] ?? (!$autoMode ? ($this->getProperty('mode') ?? '1') : null);
 
 // --- Обычный режим (без авто)
