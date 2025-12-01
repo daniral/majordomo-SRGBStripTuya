@@ -42,7 +42,8 @@
  */
 //
 
-// Инициализация scenesList, если пуст.
+
+// Инициализация свойств, если пусто.
 if ($this->getProperty('scenesList') === '') {
     $this->setProperty('scenesList',
         'Яркий=05464601000003e803e800000000464601007803e803e80000000046460100f003e803e800000000464601003d03e803e80000000046460100ae03e803e800000000464601011303e803e800000000,
@@ -79,45 +80,42 @@ if ($this->getProperty('scenesList') === '') {
          Фиолетовый=13000000011303e803e800000000'
     );
 }
+if ($this->getProperty('level') == '') $this->setProperty('level', '50');
+if ($this->getProperty('color') == '') $this->setProperty('color', '#ffff00');
+if ($this->getProperty('sceneName') === '') $this->setProperty('sceneName', 'Спокойная');
 
 $property = $params['PROPERTY'] ?? null;
-$value    = $params['NEW_VALUE'] ?? null;
 $source   = strtok($params['SOURCE'] ?? '', ' ');
+$value = ($property === 'colorWork')
+    ? normalizeRange($params['NEW_VALUE'], 1, 100, 'color')
+    : (($property !== 'sceneWork')
+        ? normalizeRange($params['NEW_VALUE'], 1, 1000, 'number') / 10
+        : ($params['NEW_VALUE'] ?? null));
 
 // Защита от рекурсий. 
-if ($source === 'propertysUpdated') return;
+if ($source === 'propertysUpdated' || is_null($value)) return;
 
-// --- 2. Обработка colorWork: HSV -> RGB/Level ---
-if ($property === 'colorWork' && !is_null($value)) {
-    // Нормализуем значение HSV 
-    $colorWorkValue = normalizeRange($value);
-    // Проверка, что значение прошло валидацию (не null)
-	if (is_null($colorWorkValue)) {
-        return; 
-    }
+//  Обработка colorWork: HSV -> RGB/Level ---
+if ($property === 'colorWork' ) {
     // Преобразуем HSV в RGB Hex и Яркость
-    $data = hsvToRgbHex($colorWorkValue);
-    $colorRGB = $data['rgbHex'];
-    $level = $data['brightness'];
-    
+    $data = hsvToRgbHex($value);
+    $color = $data['rgbHex'];
+    $colorLevel = $data['brightness'];
     // Обновляем свойства.
-    $this->setProperty('color', $colorRGB, 'worksUpdated');
-    $this->setProperty('colorSaved', $colorRGB);
-    $this->setProperty('level', $level, 'worksUpdated');
-    $this->setProperty('levelSaved', $level);
-
+    $this->setProperty('color', $color, 'worksUpdated');
+    $this->setProperty('colorSaved', $color);
+    $this->setProperty('colorLevel', $colorLevel, 'worksUpdated');
+    $this->setProperty('colorLevelSaved', $colorLevel);
     return; // Завершаем работу, если обработано colorWork
 }
 
-// --- 3. Обработка sceneWork: Код Сцены -> Имя Сцены ---
-if ($property === 'sceneWork' && !is_null($value)) {
+//  Обработка sceneWork: Код Сцены -> Имя Сцены ---
+if ($property === 'sceneWork') {
     $sceneWork = trim($value, " \t\n\r\0\x0B\"'");
     $scenesListRaw = $this->getProperty('scenesList');
-    
     // Разбиваем список сцен на ассоциативный массив [код_сцены => имя_сцены]
     $sceneMap = [];
     $sceneItems = preg_split('/\s*(?:,|\r\n|\n|\r)\s*/', $scenesListRaw, -1, PREG_SPLIT_NO_EMPTY);
-    
     foreach ($sceneItems as $item) {
         [$name, $code] = array_map('trim', explode('=', $item, 2));
         if ($name && $code) {
@@ -125,14 +123,74 @@ if ($property === 'sceneWork' && !is_null($value)) {
             $sceneMap[$code] = $name;
         }
     }
-
     $sceneNameToSet = $sceneMap[$sceneWork] ?? 'unknown';
-
     // Устанавливаем найденное имя и сохраняем его
     if ($sceneNameToSet !== 'unknown') {
         $this->setProperty('sceneNameSaved', $sceneNameToSet);
     }
-    
     // Обновляем sceneName для UI
     $this->setProperty('sceneName', $sceneNameToSet, 'worksUpdated');
 }
+
+
+
+
+
+
+
+// $property = $params['PROPERTY'] ?? null;
+// $value    = $params['NEW_VALUE'] ?? null;
+// $source   = strtok($params['SOURCE'] ?? '', ' ');
+
+// // Защита от рекурсий. 
+// if ($source === 'propertysUpdated') return;
+
+// // --- 2. Обработка colorWork: HSV -> RGB/Level ---
+// if ($property === 'colorWork' && !is_null($value)) {
+//     // Нормализуем значение HSV 
+//     $colorWorkValue = normalizeRange($value);
+//     // Проверка, что значение прошло валидацию (не null)
+// 	if (is_null($colorWorkValue)) {
+//         return; 
+//     }
+//     // Преобразуем HSV в RGB Hex и Яркость
+//     $data = hsvToRgbHex($colorWorkValue);
+//     $colorRGB = $data['rgbHex'];
+//     $level = $data['brightness'];
+    
+//     // Обновляем свойства.
+//     $this->setProperty('color', $colorRGB, 'worksUpdated');
+//     $this->setProperty('colorSaved', $colorRGB);
+//     $this->setProperty('level', $level, 'worksUpdated');
+//     $this->setProperty('levelSaved', $level);
+
+//     return; // Завершаем работу, если обработано colorWork
+// }
+
+// // --- 3. Обработка sceneWork: Код Сцены -> Имя Сцены ---
+// if ($property === 'sceneWork' && !is_null($value)) {
+//     $sceneWork = trim($value, " \t\n\r\0\x0B\"'");
+//     $scenesListRaw = $this->getProperty('scenesList');
+    
+//     // Разбиваем список сцен на ассоциативный массив [код_сцены => имя_сцены]
+//     $sceneMap = [];
+//     $sceneItems = preg_split('/\s*(?:,|\r\n|\n|\r)\s*/', $scenesListRaw, -1, PREG_SPLIT_NO_EMPTY);
+    
+//     foreach ($sceneItems as $item) {
+//         [$name, $code] = array_map('trim', explode('=', $item, 2));
+//         if ($name && $code) {
+//             // Ключ - код сцены (sceneWork), Значение - имя сцены (sceneName)
+//             $sceneMap[$code] = $name;
+//         }
+//     }
+
+//     $sceneNameToSet = $sceneMap[$sceneWork] ?? 'unknown';
+
+//     // Устанавливаем найденное имя и сохраняем его
+//     if ($sceneNameToSet !== 'unknown') {
+//         $this->setProperty('sceneNameSaved', $sceneNameToSet);
+//     }
+    
+//     // Обновляем sceneName для UI
+//     $this->setProperty('sceneName', $sceneNameToSet, 'worksUpdated');
+// }
