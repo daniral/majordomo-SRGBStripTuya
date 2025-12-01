@@ -84,7 +84,7 @@ $this->device_types['RGBStripTuya'] = array(
 		'colorWork' => array('DESCRIPTION' => 'Рабочий цвет (HSV).', 'ONCHANGE' => 'worksUpdated'),
 		'colorSaved' => array('DESCRIPTION' => 'Последний цвет.'),
 		'level' => array('DESCRIPTION' => 'Яркость (0<-->100).', 'ONCHANGE' => 'propertysUpdated', 'DATA_KEY' => 1),
-		'levelSaved' => array('DESCRIPTION' => 'Последняя яркость.', 'ONCHANGE' => 'propertysUpdated', 'DATA_KEY' => 1),
+		'levelSaved' => array('DESCRIPTION' => 'Последняя яркость.'),
 		'workMode' => array('DESCRIPTION' => 'Режим работы.'),
 		'sceneWork' => array('DESCRIPTION' => 'Рабочая сцена.', 'ONCHANGE' => 'worksUpdated'),
 		'scenesList' => array('DESCRIPTION' => 'Список сцен.', 'ONCHANGE' => 'propertysUpdated'),
