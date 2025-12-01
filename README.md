@@ -12,7 +12,7 @@
 
 ## 📘 Описание
 
-**`SRGBStripTuya`** — расширяет класс *SControllers* 
+**`SRGBStripTuya2`** — расширяет класс *SControllers* 
 > Простое устройство *Guver Lamp (Tuya)* для MajorDoMo.
 
 **🛑 Лента должна быть подключена через хаб Tuya!**  
