@@ -30,8 +30,8 @@
  *  • SOURCE="worksUpdated" — предотвращает циклические обновления.
  *
  * --- Режимы работы ---
- *  • work_mode="colour" — при изменении color или level.
- *  • work_mode="scene"  — при выборе сцены.
+ *  • workMode="colour" — при изменении color или level.
+ *  • workMode="scene"  — при выборе сцены.
  *
  * --- Используемые свойства объекта ---
  *  • status           — включено/выключено (0/1)
@@ -42,7 +42,7 @@
  *  • sceneNameSaved   — последняя корректная сцена
  *  • sceneWork        — активная сцена (код устройства)
  *  • scenesList       — список сцен: "Имя=Значение,Имя2=Значение2"
- *  • work_mode        — режим работы ("colour" или "scene")
+ *  • workMode        — режим работы ("colour" или "scene")
  *
  * --- Параметры входящего события ---
  * @param array $params Ассоциативный массив:
@@ -56,12 +56,12 @@
  *  3. Нормализация числовых значений.
  *  4. Для color/level:
  *        - включение устройства,
- *        - установка work_mode=colour,
+ *        - установка workMode=colour,
  *        - генерация colorWork,
  *        - сохранение *_Saved.
  *  5. Для sceneName:
  *        - поиск сцены,
- *        - установка sceneWork и work_mode=scene,
+ *        - установка sceneWork и workMode=scene,
  *        - fallback на сохранённую сцену.
  *  6. Для scenesList:
  *        - очистка, валидация, пересборка,
@@ -279,7 +279,7 @@ if ($property === 'scenesList') {
 // 		return;
 // 	}
 //     // Обновляем режим
-//     $this->setProperty('work_mode', 'colour');
+//     $this->setProperty('workMode', 'colour');
 //     // Если значение реально изменилось — сохраняем
 //     if ($norm != $this->getProperty($property)) {
 //         $this->setProperty($property, $norm, 'worksUpdated');
@@ -304,7 +304,7 @@ if ($property === 'scenesList') {
 //     foreach ($sceneItems as $item) {
 //         [$name, $scene] = array_pad(explode('=', $item, 2), 2, null);
 //         if ($name === $sceneName && $scene !== null) {
-//             $this->setProperty('work_mode', 'scene');
+//             $this->setProperty('workMode', 'scene');
 // 			$this->setProperty('sceneNameSaved', $name);
 //             $this->setProperty('sceneWork', $scene, 'propertysUpdated');
 //             if (!$this->getProperty('status')) $this->setProperty('status', 1);

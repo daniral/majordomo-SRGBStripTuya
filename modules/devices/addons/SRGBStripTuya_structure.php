@@ -21,7 +21,7 @@
  * @property int    $level           Текущая яркость (1–100). 
  *                                   DataKey. OnChange: propertysUpdated.
  *
- * @property string $work_mode       Режим работы устройства. Возможные значения:
+ * @property string $workMode       Режим работы устройства. Возможные значения:
  *                                   "color" — управление цветом,
  *                                   "scene" — использование сцены.
  *
@@ -85,7 +85,7 @@ $this->device_types['RGBStripTuya'] = array(
 		'colorSaved' => array('DESCRIPTION' => 'Последний цвет.'),
 		'level' => array('DESCRIPTION' => 'Яркость (0<-->100).', 'ONCHANGE' => 'propertysUpdated', 'DATA_KEY' => 1),
 		'levelSaved' => array('DESCRIPTION' => 'Последняя яркость.', 'ONCHANGE' => 'propertysUpdated', 'DATA_KEY' => 1),
-		'work_mode' => array('DESCRIPTION' => 'Режим работы.'),
+		'workMode' => array('DESCRIPTION' => 'Режим работы.'),
 		'sceneWork' => array('DESCRIPTION' => 'Рабочая сцена.', 'ONCHANGE' => 'worksUpdated'),
 		'scenesList' => array('DESCRIPTION' => 'Список сцен.', 'ONCHANGE' => 'propertysUpdated'),
 		'sceneName' => array('DESCRIPTION' => 'Название текущей сцены.', 'ONCHANGE' => 'propertysUpdated', 'DATA_KEY' => 1),
