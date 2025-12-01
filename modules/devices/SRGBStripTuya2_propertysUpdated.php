@@ -131,8 +131,8 @@ if ($property === 'color' || $property === 'level') {
     $this->setProperty('workMode', 'colour');
     // Генерация HSV-HEX
     $color = $property === 'color' ? $value : $this->getProperty('color');
-    $colorLevel = $property === 'colorLevel' ? $value : $this->getProperty('colorLevel');
-    $hsvHex = rgbToHSVhex($color, $colorLevel);
+    $level = $property === 'level' ? $value : $this->getProperty('level');
+    $hsvHex = rgbToHSVhex($color, $level);
     $this->setProperty('colorWork', $hsvHex, 'propertysUpdated');
 }
 
