@@ -82,16 +82,17 @@ pink, lime
 | Метод            | Описание                 |
 | ---------------- | ------------------------ |
 | `setColor`       | Установить цвет          |
-| `levelDown`      | Уменьшить яркость        |
+| `setLevel`       | Установить яркость       |
 | `levelUp`        | Увеличить яркость        |
+| `levelDown`      | Уменьшить яркость        |
 
 ```php
 callMethod('Имя Объекта.setColor', array("value"=>`#RRGGBB` или `#RGB` или присет));
 callMethod('Имя Объекта.setLevel', array("value"=>1--100));
-callMethod('Имя Объекта.colorLevelUp', array("value"=>1--100));
-  *callMethod('Имя Объекта.colorLevelUp'); увеличит на 10
-callMethod('Имя Объекта.colorLevelDown', array("value"=>1--100));
-  *callMethod('Имя Объекта.colorLevelUp'); уменьшит на 10
+callMethod('Имя Объекта.levelUp', array("value"=>1--100));
+  *callMethod('Имя Объекта.levelUp'); увеличит на 10
+callMethod('Имя Объекта.levelDown', array("value"=>1--100));
+  *callMethod('Имя Объекта.levelUp'); уменьшит на 10
 ```
 
 ---
