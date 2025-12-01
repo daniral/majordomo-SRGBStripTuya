@@ -95,7 +95,7 @@ callMethod('Имя Объекта.colorLevelDown', array("value"=>1--100));
 ```
 
 ---
-# 🎬 Управление сценами
+## 🎬 Управление сценами
 
 📄 `scenesList`
 
