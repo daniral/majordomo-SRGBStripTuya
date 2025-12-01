@@ -129,8 +129,10 @@ if (!function_exists('autoOff')) {
 
 		if($timerValue===0 || $flagValue===1 || $presenceValue===1) return;
 
+		ClearTimeOut($name.'TimerOff');
+		
 		$timerCode = "if(!getGlobal('{$name}.{$flag}') && !getGlobal('{$name}.{$presence}')) callMethod('{$name}.turnOff');";
-		setTimeOut($name.'Timer', $timerCode, $timerValue);
+		setTimeOut($name.'TimerOff', $timerCode, $timerValue);
 	}
 }
 
