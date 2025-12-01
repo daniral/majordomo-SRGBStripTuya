@@ -51,8 +51,12 @@
 $this->callMethod('byDefault');
 
 $property = $params['PROPERTY'] ?? null;
-$value    = $property === 'colorWork' ? normalizeRange($value) : $params['NEW_VALUE'] ?? null;
 $source   = strtok($params['SOURCE'] ?? '', ' ');
+$value = ($property === 'colorWork')
+    ? normalizeRange($params['NEW_VALUE'], 1, 100, 'color')
+    : (($property !== 'sceneWork')
+        ? normalizeRange($params['NEW_VALUE'], 1, 1000, 'number') / 10
+        : ($params['NEW_VALUE'] ?? null));
 
 // Защита от рекурсий. 
 if ($source === 'propertysUpdated' || is_null($value)) return;
@@ -62,7 +66,7 @@ $this->setProperty('flag', 1);
 //  Обработка colorWork: HSV -> RGB/Level ---
 if ($property === 'colorWork' ) {
     // Преобразуем HSV в RGB Hex и Яркость
-    $data = hsvToRgbHex($colorWorkValue);
+    $data = hsvToRgbHex($value);
     $colorRGB = $data['rgbHex'];
     $level = $data['brightness'];
     // Обновляем свойства.
@@ -72,6 +76,7 @@ if ($property === 'colorWork' ) {
     $this->setProperty('levelSaved', $level);
     return; // Завершаем работу, если обработано colorWork
 }
+
 //  Обработка sceneWork: Код Сцены -> Имя Сцены ---
 if ($property === 'sceneWork') {
     $sceneWork = trim($value, " \t\n\r\0\x0B\"'");

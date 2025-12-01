@@ -127,7 +127,8 @@ if (!function_exists('autoOff')) {
 		if(is_string($presence)) $presenceValue=$object->getProperty($presence)??0;
 		elseif(is_numeric($presence)) $presenceValue=$presence;
 
-		if($timerValue===0) return;
+		if($timerValue===0 || $flagValue===1 || $presenceValue===1) return;
+
 		$timerCode = "if(!getGlobal('{$name}.{$flag}') && !getGlobal('{$name}.{$presence}')) callMethod('{$name}.turnOff');";
 		setTimeOut($name.'Timer', $timerCode, $timerValue);
 	}
