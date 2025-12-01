@@ -130,7 +130,7 @@ $property = $params['PROPERTY'] ?? null;
 $source   = strtok($params['SOURCE'] ?? '', ' ');
 $value = ($property === 'color')
     ? normalizeRange($value, 1, 100, 'color') // Если color
-    : (($property === 'sceneName')
+    : (($property === 'sceneName' || $property === 'scenesList')
         ? ($params['NEW_VALUE'] ?? null) // Если sceneName (сырое значение)
         : normalizeRange($value, 1, 100, 'number')); // Иначе (level)
 
