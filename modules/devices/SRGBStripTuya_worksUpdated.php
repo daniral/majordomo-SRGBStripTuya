@@ -100,12 +100,12 @@ if ($property === 'colorWork' ) {
     // Преобразуем HSV в RGB Hex и Яркость
     $data = hsvToRgbHex($value);
     $color = $data['rgbHex'];
-    $colorLevel = $data['brightness'];
+    $level = $data['brightness'];
     // Обновляем свойства.
     $this->setProperty('color', $color, 'worksUpdated');
     $this->setProperty('colorSaved', $color);
-    $this->setProperty('colorLevel', $colorLevel, 'worksUpdated');
-    $this->setProperty('colorLevelSaved', $colorLevel);
+    $this->setProperty('level', $level, 'worksUpdated');
+    $this->setProperty('levelSaved', $level);
     return; // Завершаем работу, если обработано colorWork
 }
 
