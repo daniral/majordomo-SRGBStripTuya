@@ -1,6 +1,6 @@
 <?php
-/**
- * Class SRGBStripTuya
+/** Class SRGBStripTuya
+ * 
  *
  * Класс устройства RGB-ленты Tuya для MajorDoMo.
  * Наследуется от SControllers. Описывает свойства яркости, цвета,
