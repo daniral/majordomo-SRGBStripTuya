@@ -165,8 +165,8 @@ if ($property === 'sceneName') {
     foreach ($sceneItems as $item) {
         [$name, $scene] = array_pad(explode('=', $item, 2), 2, null);
         if ($name === $sceneName && $scene !== null) {
+            $saveProperty($this);
             $this->setProperty('workMode', 'scene');
-			$saveProperty($this);
             $this->setProperty('sceneWork', $scene, 'propertysUpdated');
 			return;
         }
