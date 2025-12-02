@@ -78,7 +78,7 @@ $this->device_types['RGBStripTuya2'] = array(
 	'TITLE' => 'Освещение(Tuya ZigBee LED strip) - 2',
 	'PARENT_CLASS' => 'SControllers',
 	'CLASS' => 'SRGBStripTuya2',
-	'DESCRIPTION'=>'RGB лента(Tuya)2',
+	'DESCRIPTION'=>'Tuya ZigBee LED strip - 2',
 	'PROPERTIES' => array(
 		'color' => array('DESCRIPTION' => 'Цвет (RGB).', 'ONCHANGE' => 'propertysUpdated', 'DATA_KEY' => 1),
 		'colorWork' => array('DESCRIPTION' => 'Рабочий цвет (HSV).', 'ONCHANGE' => 'worksUpdated'),
