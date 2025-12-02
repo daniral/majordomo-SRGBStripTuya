@@ -125,6 +125,7 @@ $saveProperty = function ($obj) use ($property, $value, $source) {
 		$obj->setProperty('flag', 1);
 		$obj->setProperty($property . 'Saved', $value);
 	}
+    // Блокируем входящие данные от Туя на 8 сек
 	$obj->setProperty('blockTuya', 1);
 	setTimeOut($obj->object_title.'blockTuyaTimer', "setGlobal('" . $obj->object_title . ".blockTuya', 0);", 8);
 	// Если значение реально изменилось — сохраняем
