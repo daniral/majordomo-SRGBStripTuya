@@ -132,7 +132,7 @@ $value = ($property === 'color')
     ? normalizeRange($value, 1, 100, 'color') // Если color
     : (($property === 'sceneName' || $property === 'scenesList')
         ? ($params['NEW_VALUE'] ?? null) // Если sceneName (сырое значение)
-        : normalizeRange($value, 1, 100, 'number')); // Иначе (level)
+        : round(normalizeRange($value, 1, 100, 'number'))); // Иначе (level)
 
 // --- Защита от рекурсий и не верных данных
 if ($source === 'worksUpdated' || is_null($value)) {
