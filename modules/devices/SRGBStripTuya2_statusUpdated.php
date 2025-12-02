@@ -1,8 +1,7 @@
 <?php
 
-
 $source = strtok($params['SOURCE'] ?? '', ' ');
-if($source==='tuya'){
+if($source==='tuya' && !$this->getProperty('blockTuya')){
 	if(!$params['NEW_VALUE']) {
 		$this->callMethod('turnOff');
 	}elseif($params['NEW_VALUE']) {

@@ -107,8 +107,8 @@ $this->device_types['RGBStripTuya2'] = array(
 
 		'autoOnOff' => array('DESCRIPTION' => 'Автовключение','_CONFIG_TYPE'=>'select','_CONFIG_OPTIONS'=>'1=Включено,0=Отключено'),
 		'timerOff' => array('DESCRIPTION' => 'Выключить через(сек). 0-не выключать', '_CONFIG_TYPE' => 'num'),
-		'workingDay' => array('DESCRIPTION' => 'Включать','_CONFIG_TYPE'=>'select','_CONFIG_OPTIONS'=>'1=Днём,2=Ночью,3=Круглосуточно'),
-		'workingBy' => array('DESCRIPTION' => 'Работать по','_CONFIG_TYPE'=>'select','_CONFIG_OPTIONS'=>'1=Времени,2=Солнцу,3=Датчику'),
+		'workingDay' => array('DESCRIPTION' => 'Включать','_CONFIG_TYPE'=>'select','_CONFIG_OPTIONS'=>'1=День,2=Ночь,3=24 часа'),
+		'workingBy' => array('DESCRIPTION' => 'Работать по','_CONFIG_TYPE'=>'select','_CONFIG_OPTIONS'=>'1=Время,2=Солнце,3=Датчик'),
 		'dayBegin' => array('DESCRIPTION' => 'Начало режима день(hh:mm)', '_CONFIG_TYPE' => 'num'),
 		'nightBegin' => array('DESCRIPTION' => 'Начало режима ночь(hh:mm)', '_CONFIG_TYPE' => 'num'),
 		'sunriseTime' => array('DESCRIPTION' => 'Время восхода солнца'),
@@ -121,7 +121,8 @@ $this->device_types['RGBStripTuya2'] = array(
 		'illuminanceFlag' => array('DESCRIPTION' => 'Стопер датчика освещения'),
 		'illuminance' => array('DESCRIPTION' => 'Данные с датчика освещения', 'DATA_KEY' => 1),
 		'presence' => array('DESCRIPTION' => 'Данные с датчика присутствия', 'ONCHANGE' => 'propertysUpdated', 'DATA_KEY' => 1),
-		'flag' => array('DESCRIPTION' => 'Стопер'),
+		'flag' => array('DESCRIPTION' => 'Стопер запуска авто мода'),
+		'blockTuya' => array('DESCRIPTION' => 'Стопер для данных от туя'),
 	),
 	'METHODS' => array(
 		'turnOn' => array('DESCRIPTION' => 'Включить', '_CONFIG_SHOW' => 1),

@@ -46,6 +46,8 @@
  *
  * @return void
  */
+//
+
 
 // --- Дефолтные свойства
 $this->callMethod('byDefault');
@@ -59,43 +61,43 @@ $value = ($property === 'colorWork')
         : ($params['NEW_VALUE'] ?? null));
 
 // Защита от рекурсий. 
-if ($source === 'propertysUpdated' || is_null($value)) return;
+if ($source === 'propertysUpdated' || is_null($value) || $this->getProperty('blockTuya')) return;
 
 $this->setProperty('flag', 1);
 
 //  Обработка colorWork: HSV -> RGB/Level ---
 if ($property === 'colorWork' ) {
-    // Преобразуем HSV в RGB Hex и Яркость
-    $data = hsvToRgbHex($value);
-    $colorRGB = $data['rgbHex'];
-    $level = $data['brightness'];
-    // Обновляем свойства.
-    $this->setProperty('color', $colorRGB, 'worksUpdated');
-    $this->setProperty('colorSaved', $colorRGB);
-    $this->setProperty('level', $level, 'worksUpdated');
-    $this->setProperty('levelSaved', $level);
-    return; // Завершаем работу, если обработано colorWork
+	// Преобразуем HSV в RGB Hex и Яркость
+	$data = hsvToRgbHex($value);
+	$colorRGB = $data['rgbHex'];
+	$level = $data['brightness'];
+	// Обновляем свойства.
+	$this->setProperty('color', $colorRGB, 'worksUpdated');
+	$this->setProperty('colorSaved', $colorRGB);
+	$this->setProperty('level', $level, 'worksUpdated');
+	$this->setProperty('levelSaved', $level);
+	return; // Завершаем работу, если обработано colorWork
 }
 
 //  Обработка sceneWork: Код Сцены -> Имя Сцены ---
 if ($property === 'sceneWork') {
-    $sceneWork = trim($value, " \t\n\r\0\x0B\"'");
-    $scenesListRaw = $this->getProperty('scenesList');
-    // Разбиваем список сцен на ассоциативный массив [код_сцены => имя_сцены]
-    $sceneMap = [];
-    $sceneItems = preg_split('/\s*(?:,|\r\n|\n|\r)\s*/', $scenesListRaw, -1, PREG_SPLIT_NO_EMPTY);
-    foreach ($sceneItems as $item) {
-        [$name, $code] = array_map('trim', explode('=', $item, 2));
-        if ($name && $code) {
-            // Ключ - код сцены (sceneWork), Значение - имя сцены (sceneName)
-            $sceneMap[$code] = $name;
-        }
-    }
-    $sceneNameToSet = $sceneMap[$sceneWork] ?? 'unknown';
-    // Устанавливаем найденное имя и сохраняем его
-    if ($sceneNameToSet !== 'unknown') {
-        $this->setProperty('sceneNameSaved', $sceneNameToSet);
-    }
-    // Обновляем sceneName для UI
-    $this->setProperty('sceneName', $sceneNameToSet, 'worksUpdated');
+	$sceneWork = trim($value, " \t\n\r\0\x0B\"'");
+	$scenesListRaw = $this->getProperty('scenesList');
+	// Разбиваем список сцен на ассоциативный массив [код_сцены => имя_сцены]
+	$sceneMap = [];
+	$sceneItems = preg_split('/\s*(?:,|\r\n|\n|\r)\s*/', $scenesListRaw, -1, PREG_SPLIT_NO_EMPTY);
+	foreach ($sceneItems as $item) {
+		[$name, $code] = array_map('trim', explode('=', $item, 2));
+		if ($name && $code) {
+			// Ключ - код сцены (sceneWork), Значение - имя сцены (sceneName)
+			$sceneMap[$code] = $name;
+		}
+	}
+	$sceneNameToSet = $sceneMap[$sceneWork] ?? 'unknown';
+	// Устанавливаем найденное имя и сохраняем его
+	if ($sceneNameToSet !== 'unknown') {
+		$this->setProperty('sceneNameSaved', $sceneNameToSet);
+	}
+	// Обновляем sceneName для UI
+	$this->setProperty('sceneName', $sceneNameToSet, 'worksUpdated');
 }
