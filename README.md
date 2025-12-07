@@ -42,7 +42,7 @@
 | Tuya поле      | Свойство MajorDoMo |
 | -------------- | ------------------ |
 | `switch_led`   | `status`           |
-| `work_mode`    | `workMode`         |
+| `work_mode`    | `modeWork`         |
 | `colour_data`  | `colorWork`        |
 | `scene_data`   | `sceneWork`        |
 ---

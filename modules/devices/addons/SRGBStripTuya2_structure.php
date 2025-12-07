@@ -92,7 +92,7 @@ $this->device_types['RGBStripTuya2'] = array(
 		'sceneNameSaved' => array('DESCRIPTION' => 'Последняя сцена.'),
 		'scenesList' => array('DESCRIPTION' => 'Список сцен.', 'ONCHANGE' => 'propertysUpdated'),
 
-		'workMode' => array('DESCRIPTION' => 'Режим работы.'),
+		'modeWork' => array('DESCRIPTION' => 'Режим работы.'),
 		'mode' => array('DESCRIPTION' => 'Что включать (цвет, сцена)','_CONFIG_TYPE'=>'select','_CONFIG_OPTIONS'=>'1=Цвет,2=Сцена'),
 
 		'dayColor' => array('DESCRIPTION' => 'Цвет днем', '_CONFIG_TYPE' => 'num',),

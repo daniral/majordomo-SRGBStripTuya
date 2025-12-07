@@ -146,7 +146,7 @@ if ($property === 'presence') {
 if ($property === 'color' || $property === 'level') {
 	$saveProperty($this);
     // Обновляем режим
-    $this->setProperty('workMode', 'colour');
+    $this->setProperty('modeWork', 'colour');
     // Генерация HSV-HEX
     $color = $property === 'color' ? $value : $this->getProperty('color');
     $level = $property === 'level' ? $value : $this->getProperty('level');
@@ -167,7 +167,7 @@ if ($property === 'sceneName') {
         [$name, $scene] = array_pad(explode('=', $item, 2), 2, null);
         if ($name === $sceneName && $scene !== null) {
             $saveProperty($this);
-            $this->setProperty('workMode', 'scene');
+            $this->setProperty('modeWork', 'scene');
             $this->setProperty('sceneWork', $scene, 'propertysUpdated');
 			return;
         }
