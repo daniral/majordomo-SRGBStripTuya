@@ -30,8 +30,8 @@
  *  • SOURCE="worksUpdated" — предотвращает циклические обновления.
  *
  * --- Режимы работы ---
- *  • workMode="colour" — при изменении color или level.
- *  • workMode="scene"  — при выборе сцены.
+ *  • modeWork="colour" — при изменении color или level.
+ *  • modeWork="scene"  — при выборе сцены.
  *
  * --- Используемые свойства объекта ---
  *  • status           — включено/выключено (0/1)
@@ -42,7 +42,7 @@
  *  • sceneNameSaved   — последняя корректная сцена
  *  • sceneWork        — активная сцена (код устройства)
  *  • scenesList       — список сцен: "Имя=Значение,Имя2=Значение2"
- *  • workMode        — режим работы ("colour" или "scene")
+ *  • modeWork        — режим работы ("colour" или "scene")
  *
  * --- Параметры входящего события ---
  * @param array $params Ассоциативный массив:
@@ -56,12 +56,12 @@
  *  3. Нормализация числовых значений.
  *  4. Для color/level:
  *        - включение устройства,
- *        - установка workMode=colour,
+ *        - установка modeWork=colour,
  *        - генерация colorWork,
  *        - сохранение *_Saved.
  *  5. Для sceneName:
  *        - поиск сцены,
- *        - установка sceneWork и workMode=scene,
+ *        - установка sceneWork и modeWork=scene,
  *        - fallback на сохранённую сцену.
  *  6. Для scenesList:
  *        - очистка, валидация, пересборка,
@@ -145,7 +145,7 @@ if ($source === 'worksUpdated' || is_null($value)) {
 // --- Обработка Цвет / Яркость цвета
 if ($property === 'color' || $property === 'level') {
     // Обновляем режим
-    $this->setProperty('workMode', 'colour');
+    $this->setProperty('modeWork', 'colour');
     // Генерация HSV-HEX
     $color = $property === 'color' ? $value : $this->getProperty('color');
     $level = $property === 'level' ? $value : $this->getProperty('level');
@@ -166,7 +166,7 @@ if ($property === 'sceneName') {
         [$name, $scene] = array_pad(explode('=', $item, 2), 2, null);
         if ($name === $sceneName && $scene !== null) {
             $foundScen = true;
-            $this->setProperty('workMode', 'scene');
+            $this->setProperty('modeWork', 'scene');
             $this->setProperty('sceneWork', $scene, 'propertysUpdated');
             break;
         }
