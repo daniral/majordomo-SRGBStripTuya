@@ -122,7 +122,6 @@ $this->device_types['RGBStripTuya2'] = array(
 		'illuminance' => array('DESCRIPTION' => 'Данные с датчика освещения', 'DATA_KEY' => 1),
 		'presence' => array('DESCRIPTION' => 'Данные с датчика присутствия', 'ONCHANGE' => 'propertysUpdated', 'DATA_KEY' => 1),
 		'flag' => array('DESCRIPTION' => 'Стопер запуска авто мода'),
-		'blockTuya' => array('DESCRIPTION' => 'Стопер для данных от туя'),
 	),
 	'METHODS' => array(
 		'turnOn' => array('DESCRIPTION' => 'Включить', '_CONFIG_SHOW' => 1),
