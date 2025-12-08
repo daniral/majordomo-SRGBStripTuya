@@ -1,9 +1,10 @@
 <?php
 
 $source = strtok($params['SOURCE'] ?? '', ' ');
-if($source==='tuya' && !$this->getProperty('blockTuya')){
+if($source==='tuya'){
 	if(!$params['NEW_VALUE']) {
-		$this->callMethod('turnOff');
+		$this->setProperty('flag', 0);
+		$this->setProperty('illuminanceFlag', 0);
 	}elseif($params['NEW_VALUE']) {
 		$this->setProperty('flag', 1);
 	}

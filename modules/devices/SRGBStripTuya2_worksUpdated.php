@@ -61,9 +61,7 @@ $value = ($property === 'colorWork')
         : ($params['NEW_VALUE'] ?? null));
 
 // Защита от рекурсий. 
-if ($source === 'propertysUpdated' || is_null($value) || $this->getProperty('blockTuya')) return;
-
-$this->setProperty('flag', 1);
+if ($source === 'propertysUpdated' || is_null($value)) return;
 
 //  Обработка colorWork: HSV -> RGB/Level ---
 if ($property === 'colorWork' ) {
