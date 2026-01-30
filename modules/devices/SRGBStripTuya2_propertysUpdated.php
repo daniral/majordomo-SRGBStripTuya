@@ -83,10 +83,7 @@
 // --- Дефолтные свойства
 $this->callMethod('byDefault');
 
-// --- Дефолтные свойства
-$this->callMethod('byDefault');
-
-$value    = $params['NEW_VALUE'] ?? null;
+$value = $params['NEW_VALUE'] ?? null;
 
 // --- Преобразование предустановок цвета
 static $transform = [

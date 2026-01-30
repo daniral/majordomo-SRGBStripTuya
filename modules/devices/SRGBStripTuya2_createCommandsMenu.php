@@ -104,7 +104,7 @@ $menuItems = [
                 ['Яркость', $objectName, 'nightLevel', 'sliderbox', '', 1, 100, 1, '', '', '', 50],
         		['Сцена', $objectName, 'nightScene', 'selectbox', '', '', '', '', '', '', $sceneNamesExport, 20],
             	['Режим', $objectName, 'nightMode', 'selectbox', '', '', '', '', '', '', "1=Цвет\r\n2=Сцена", 10],
-        ]],
+            ]],
         ]],
     ],'SRGBStripTuya2.png']
 ];
